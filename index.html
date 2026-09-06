@@ -153,21 +153,75 @@
             background-color: var(--accent-color);
             color: #0c0c0e;
             border: none;
-            padding: 8px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 10px;
             width: 100%;
             cursor: pointer;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 13px;
             margin-bottom: 4px;
             transition: 0.2s;
+        }
+        .btn:active {
+            background-color: var(--accent-dark);
         }
         .btn-secondary {
             background-color: #222126;
             color: var(--text-main);
         }
 
-        /* Элементы профиля */
+        /* Переключатель вкладок внутри «Покупок» */
+        .purchases-tabs {
+            display: flex;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 16px;
+        }
+        .p-tab {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 10px 4px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+        .p-tab.active {
+            background-color: var(--accent-color);
+            color: #0c0c0e;
+            font-weight: 700;
+        }
+
+        /* Форма поиска по фото */
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: block;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 13px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .form-input:focus { border-color: var(--accent-color); }
+
+        /* Профиль */
         .profile-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -222,18 +276,9 @@
             cursor: pointer;
             font-size: 14px;
         }
-        .menu-link-row:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-        .menu-link-row:first-child {
-            padding-top: 0;
-        }
-        .lang-switch {
-            display: flex;
-            gap: 6px;
-            margin-top: 6px;
-        }
+        .menu-link-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .menu-link-row:first-child { padding-top: 0; }
+        .lang-switch { display: flex; gap: 6px; margin-top: 6px; }
         .lang-btn {
             background: #1f1e24;
             border: 1px solid var(--border-color);
@@ -292,6 +337,8 @@
 
         .screen { display: none; }
         .screen.active { display: block; }
+        .p-subscreen { display: none; }
+        .p-subscreen.active { display: block; }
 
         .section-title {
             font-size: 18px;
@@ -363,22 +410,71 @@
         </div>
     </div>
 
-    <!-- 2. ПОКУПКИ / КОРЗИНА -->
+    <!-- 2. ПОКУПКИ (С подвкладками: Корзина, Заказы, Поиск по фото) -->
     <div id="cart-screen" class="screen">
         <div class="section-title">Покупки</div>
-        <div id="cart-items">
-            <div class="cart-empty">Ваша корзина пока пуста</div>
-        </div>
         
-        <div id="checkout-section" style="display: none;">
-            <div class="payment-box">
-                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Сумма к оплате:</div>
-                <div style="color: var(--accent-color); font-size: 20px; font-weight: bold; margin-bottom: 12px;" id="total-price-text">0 сом</div>
-                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Заказ создан. Переведите на карту:</div>
-                <div style="color: var(--accent-color); font-size: 16px; font-weight: bold; letter-spacing: 1px; margin-bottom: 12px;">4714 7000 3652 9174</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">После оплаты отправьте скриншот чека боту.</div>
+        <!-- Переключатель вкладок внутри покупок -->
+        <div class="purchases-tabs">
+            <button class="p-tab active" onclick="switchPurchasesTab('cart', this)">Корзина</button>
+            <button class="p-tab" onclick="switchPurchasesTab('orders', this)">Заказы</button>
+            <button class="p-tab" onclick="switchPurchasesTab('photo', this)">Поиск по фото</button>
+        </div>
+
+        <!-- Подвкладка 1: Корзина -->
+        <div id="p-sub-cart" class="p-subscreen active">
+            <div id="cart-items">
+                <div class="cart-empty">Корзина пуста<br><span style="font-size: 12px; margin-top: 4px; display:inline-block;">Перейдите в каталог и добавьте вещи</span></div>
             </div>
-            <button class="btn" style="padding: 12px; font-size: 14px; margin-top: 16px;" onclick="checkout()">Оформить заказ</button>
+            
+            <div id="checkout-section" style="display: none;">
+                <div class="payment-box">
+                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Сумма к оплате:</div>
+                    <div style="color: var(--accent-color); font-size: 20px; font-weight: bold; margin-bottom: 12px;" id="total-price-text">0 сом</div>
+                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Заказ создан. Переведите на карту:</div>
+                    <div style="color: var(--accent-color); font-size: 16px; font-weight: bold; letter-spacing: 1px; margin-bottom: 12px;">4714 7000 3652 9174</div>
+                    <div style="font-size: 12px; color: var(--text-secondary);">После оплаты отправьте скриншот чека боту.</div>
+                </div>
+                <button class="btn" style="padding: 12px; font-size: 14px; margin-top: 16px;" onclick="checkout()">Оформить заказ</button>
+            </div>
+        </div>
+
+        <!-- Подвкладка 2: Заказы -->
+        <div id="p-sub-orders" class="p-subscreen">
+            <div class="cart-empty">У вас пока нет активных заказов</div>
+        </div>
+
+        <!-- Подвкладка 3: Поиск товара по фото -->
+        <div id="p-sub-photo" class="p-subscreen">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4;">
+                Загрузите фото товара — мы найдём его, сообщим цену и доставку.
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Фото товара</label>
+                <button class="form-input" style="text-align: center; cursor: pointer; background: var(--card-bg); color: var(--text-main);" onclick="showToast('Загрузка фото...')">
+                    📄 Загрузить фото
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Адрес доставки (необязательно)</label>
+                <input type="text" class="form-input" placeholder="Город, улица, дом, квартира">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Телефон</label>
+                <input type="text" class="form-input" placeholder="Введите ваш номер телефона">
+            </div>
+
+            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.4;">
+                Доставка из Китая оплачивается отдельно: по факту взвешивания или при получении. Точную стоимость продавец сообщит после оценки.
+            </div>
+
+            <button class="btn" onclick="showToast('Запрос успешно отправлен!')">Отправить запрос</button>
+
+            <div style="margin-top: 20px; font-size: 14px; font-weight: bold; margin-bottom: 8px;">Мои запросы</div>
+            <div style="color: var(--text-secondary); font-size: 13px;">Отправленных запросов пока нет.</div>
         </div>
     </div>
 
@@ -386,7 +482,6 @@
     <div id="profile-screen" class="screen">
         <div class="section-title">Профиль</div>
         
-        <!-- Карточка пользователя -->
         <div class="profile-card">
             <div class="profile-header-flex">
                 <div class="profile-avatar" id="user-avatar">U</div>
@@ -399,7 +494,6 @@
             <div style="margin-top: 12px; color: var(--accent-color); font-size: 14px; font-weight: 600;">⭐ Бонусы: 0</div>
         </div>
 
-        <!-- Язык -->
         <div class="profile-card">
             <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Язык</div>
             <div class="lang-switch">
@@ -408,7 +502,6 @@
             </div>
         </div>
 
-        <!-- Соцсети -->
         <div class="profile-card">
             <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Мы в соцсетях</div>
             <div class="social-btns">
@@ -417,10 +510,9 @@
             </div>
         </div>
 
-        <!-- Разделы -->
         <div class="profile-card">
             <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">Разделы</div>
-            <div class="menu-link-row" onclick="showToast('Карто-калькулятор в разработке')">
+            <div class="menu-link-row" onclick="showToast('Карго-калькулятор в разработке')">
                 <span>⚖️ Карго-калькулятор</span>
                 <span style="color: var(--text-secondary);">→</span>
             </div>
@@ -430,13 +522,11 @@
             </div>
         </div>
 
-        <!-- Избранное -->
         <div class="profile-card">
             <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Избранное</div>
             <div style="font-size: 13px; color: var(--text-main);">Пока пусто. Добавляйте товары сердечком.</div>
         </div>
 
-        <!-- Поддержка -->
         <div class="profile-card" style="cursor: pointer;" onclick="showToast('Напишите нашему менеджеру в боте')">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span style="font-weight: 500;">💬 Сообщения / Поддержка</span>
@@ -444,7 +534,6 @@
             </div>
         </div>
 
-        <!-- Копирайт -->
         <div style="text-align: center; color: var(--text-secondary); font-size: 12px; margin-top: 20px; margin-bottom: 10px;">
             Разработано: <span style="color: var(--accent-color);">@rainixshop</span>
         </div>
@@ -493,6 +582,18 @@
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
             showToast(lang === 'ru' ? 'Язык изменен на Русский' : 'Language changed to English');
+        }
+
+        /* Переключение вкладок внутри раздела «Покупки» */
+        function switchPurchasesTab(tabName, element) {
+            document.querySelectorAll('.p-subscreen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
+
+            if (tabName === 'cart') document.getElementById('p-sub-cart').classList.add('active');
+            if (tabName === 'orders') document.getElementById('p-sub-orders').classList.add('active');
+            if (tabName === 'photo') document.getElementById('p-sub-photo').classList.add('active');
+
+            element.classList.add('active');
         }
 
         function filterCategory(category, element) {
@@ -553,7 +654,7 @@
             }
             
             if (cart.length === 0) {
-                container.innerHTML = '<div class="cart-empty">Ваша корзина пока пуста</div>';
+                container.innerHTML = '<div class="cart-empty">Корзина пуста<br><span style="font-size: 12px; margin-top: 4px; display:inline-block; color: var(--text-secondary);">Перейдите в каталог и добавьте вещи</span></div>';
                 return;
             }
 
