@@ -26,6 +26,29 @@
             padding-bottom: 90px;
         }
 
+        /* Стильное всплывающее уведомление сверху */
+        #toast {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
+            z-index: 1000;
+            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            max-width: 90%;
+            box-sizing: border-box;
+        }
+        #toast.show {
+            top: 20px;
+        }
+
         .header {
             text-align: center;
             margin-bottom: 16px;
@@ -202,11 +225,15 @@
 </head>
 <body>
 
+    <!-- Всплывающее зеленое уведомление сверху -->
+    <div id="toast">Ваш заказ успешно оформлен!</div>
+
     <div class="header">
         <h1 class="logo">RAINIXSHOP</h1>
         <div class="subtitle">streetwear & sneakers</div>
     </div>
 
+    <!-- 1. МАГАЗИН -->
     <div id="shop-screen" class="screen active">
         <input type="text" class="search-box" placeholder="Поиск по названию...">
         
@@ -247,6 +274,7 @@
         </div>
     </div>
 
+    <!-- 2. ПОКУПКИ / КОРЗИНА -->
     <div id="cart-screen" class="screen">
         <div class="section-title">Покупки</div>
         <div id="cart-items">
@@ -265,6 +293,7 @@
         </div>
     </div>
 
+    <!-- 3. ПРОФИЛЬ -->
     <div id="profile-screen" class="screen">
         <div class="section-title">Профиль</div>
         <div style="background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border-color);">
@@ -274,6 +303,7 @@
         </div>
     </div>
 
+    <!-- НИЖНЕЕ МЕНЮ -->
     <div class="nav-bar">
         <button class="nav-item active" onclick="switchScreen('shop', this)">
             <span class="icon">🏛️</span> Магазин
@@ -299,15 +329,25 @@
 
         let cart = [];
 
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000); // Уведомление пропадет через 3 секунды
+        }
+
         function addToCart(title, price) {
             cart.push({ title, price });
             updateCartUI();
+            showToast(`Товар "${title}" добавлен в корзину`);
         }
 
         function buyOneClick(title, price) {
-            cart = [{ title, price }]; // Очищаем корзину и кладем туда только этот товар
+            cart = [{ title, price }];
             updateCartUI();
-            switchScreen('cart', document.querySelectorAll('.nav-item')[1]); // Сразу переходим во вкладку «Покупки»
+            switchScreen('cart', document.querySelectorAll('.nav-item')[1]);
         }
 
         function updateCartUI() {
@@ -354,7 +394,7 @@
         }
 
         function checkout() {
-            alert('Заказ успешно создан! Пожалуйста, переведите указанную сумму на карту и отправьте скриншот чека в чат с ботом.');
+            showToast('Ваш заказ успешно оформлен!');
             cart = [];
             updateCartUI();
             switchScreen('shop', document.querySelectorAll('.nav-item')[0]);
@@ -372,4 +412,5 @@
         }
     </script>
 </body>
+</html>
 </html>
