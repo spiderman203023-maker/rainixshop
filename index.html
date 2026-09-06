@@ -4,333 +4,810 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RAINIXSHOP</title>
-    <!-- Telegram WebApp Script -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        :root {
+            --bg-color: #0c0c0e;          
+            --card-bg: #161619;           
+            --accent-color: #d4b59d;      
+            --accent-dark: #b8977e;       
+            --accent-glow: rgba(212, 181, 157, 0.25);
+            --text-main: #f5f2ed;         
+            --text-secondary: #99938d;    
+            --border-color: #262529;      
+            --success-color: #22c55e;
         }
+
         body {
-            background-color: #0f0f0f;
-            color: #ffffff;
-            padding-bottom: 75px;
-        }
-        .screen {
-            display: none;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
             padding: 16px;
+            padding-bottom: 90px;
         }
-        .screen.active {
-            display: block;
+
+        #toast {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
+            z-index: 1000;
+            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            max-width: 90%;
+            box-sizing: border-box;
         }
-        h2 {
+        #toast.show { top: 20px; }
+
+        .header { text-align: center; margin-bottom: 16px; }
+        .logo {
+            color: var(--accent-color);
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px var(--accent-glow);
+            margin: 0;
+        }
+        .subtitle { color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 14px;
+            margin-bottom: 14px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .search-box:focus { border-color: var(--accent-color); }
+
+        .categories {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
             margin-bottom: 16px;
-            font-size: 22px;
+            padding-bottom: 4px;
+        }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .cat-btn.active {
+            background-color: var(--accent-color);
+            color: #0c0c0e;
+            border-color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .catalog {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 14px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid var(--border-color);
+        }
+        .card-img {
+            height: 120px;
+            background: #1f1e24;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .card-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+        .card-price { color: var(--accent-color); font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+        .badge-stock { color: var(--success-color); font-size: 11px; margin-bottom: 8px; }
+        
+        .btn {
+            background-color: var(--accent-color);
+            color: #0c0c0e;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            width: 100%;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 4px;
+            transition: 0.2s;
+        }
+        .btn:active { background-color: var(--accent-dark); }
+        .btn-secondary { background-color: #222126; color: var(--text-main); }
+
+        .purchases-tabs {
+            display: flex;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 16px;
+        }
+        .p-tab {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 10px 4px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+        .p-tab.active {
+            background-color: var(--accent-color);
+            color: #0c0c0e;
             font-weight: 700;
         }
-        /* Карточки товаров */
-        .product-card {
-            background: #1a1a1a;
+
+        .form-group { margin-bottom: 12px; }
+        .form-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 13px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .form-input:focus { border-color: var(--accent-color); }
+
+        .profile-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 14px;
             padding: 14px;
             margin-bottom: 12px;
+        }
+        .profile-header-flex { display: flex; align-items: center; gap: 14px; }
+        .profile-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--accent-color);
+            color: #0c0c0e;
+            font-weight: bold;
+            font-size: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .social-btns { display: flex; gap: 10px; margin-top: 8px; }
+        .social-btn {
+            flex: 1;
+            background: #1f1e24;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .menu-link-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #262626;
-        }
-        .product-info h3 {
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-        .product-info p {
-            color: #aaa;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
             font-size: 14px;
         }
-        button {
-            background: #ffffff;
-            color: #000000;
-            border: none;
-            padding: 8px 16px;
+        .menu-link-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .menu-link-row:first-child { padding-top: 0; }
+        
+        .lang-switch { display: flex; gap: 6px; margin-top: 6px; }
+        .lang-btn {
+            background: #1f1e24;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 14px;
             border-radius: 8px;
-            font-weight: 600;
+            font-size: 12px;
             cursor: pointer;
         }
-        button:active {
-            transform: scale(0.96);
+        .lang-btn.active {
+            background: var(--accent-color);
+            color: #0c0c0e;
+            border-color: var(--accent-color);
+            font-weight: 600;
         }
-        /* Поля ввода */
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 12px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-        }
-        input:focus, textarea:focus {
-            border-color: #666;
-        }
-        .btn-primary {
-            width: 100%;
-            background: #fff;
-            color: #000;
-            padding: 14px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 16px;
-            margin-top: 6px;
-        }
-        /* Нижнее меню */
+
         .nav-bar {
             position: fixed;
             bottom: 0;
             left: 0;
-            width: 100%;
-            height: 65px;
-            background: #141414;
-            border-top: 1px solid #222;
+            right: 0;
+            background-color: #0c0c0e;
+            border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-around;
-            align-items: center;
+            padding: 10px 0;
             z-index: 100;
         }
         .nav-item {
-            color: #777;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
             font-size: 11px;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             cursor: pointer;
-            flex: 1;
-            transition: color 0.2s;
+            gap: 4px;
+            position: relative;
         }
-        .nav-item.active {
-            color: #fff;
-            font-weight: 600;
-        }
-        /* Уведомления */
-        #toast {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #262626;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 14px;
+        .nav-item.active { color: var(--accent-color); }
+        .nav-item span.icon { font-size: 18px; }
+        
+        .cart-badge {
+            position: absolute;
+            top: -2px;
+            right: 8px;
+            background: var(--accent-color);
+            color: #0c0c0e;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 10px;
             display: none;
-            z-index: 1000;
-            border: 1px solid #383838;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .screen { display: none; }
+        .screen.active { display: block; }
+        .p-subscreen { display: none; }
+        .p-subscreen.active { display: block; }
+
+        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 14px; }
+        .cart-empty { text-align: center; color: var(--text-secondary); margin-top: 40px; }
+        .payment-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: 16px;
         }
     </style>
 </head>
 <body>
 
-    <div id="toast">Уведомление</div>
+    <div id="toast">Успешно!</div>
 
-    <!-- ЭКРАН 1: МАГАЗИН -->
+    <div class="header">
+        <h1 class="logo">RAINIXSHOP</h1>
+        <div class="subtitle">streetwear & sneakers</div>
+    </div>
+
+    <!-- 1. МАГАЗИН -->
     <div id="shop-screen" class="screen active">
-        <h2>🔥 RAINIXSHOP Каталог</h2>
+        <input type="text" id="search-input" class="search-box" placeholder="Поиск по названию..." oninput="filterProducts()">
         
-        <div class="product-card">
-            <div class="product-info">
-                <h3>Oversize T-Shirt Black</h3>
-                <p>150 000 сум</p>
-            </div>
-            <button onclick="addToCart('Oversize T-Shirt Black', 150000)">В корзину</button>
+        <div class="categories">
+            <button class="cat-btn active" onclick="filterCategory('all', this)" data-i18n="cat_all">Все</button>
+            <button class="cat-btn" onclick="filterCategory('shoes', this)" data-i18n="cat_shoes">Обувь</button>
+            <button class="cat-btn" onclick="filterCategory('top', this)" data-i18n="cat_top">Верх</button>
+            <button class="cat-btn" onclick="filterCategory('bottom', this)" data-i18n="cat_bottom">Низ</button>
+            <button class="cat-btn" onclick="filterCategory('accessories', this)" data-i18n="cat_accessories">Аксессуары</button>
         </div>
 
-        <div class="product-card">
-            <div class="product-info">
-                <h3>Baggy Jeans Denim</h3>
-                <p>350 000 сум</p>
+        <div class="catalog" id="product-catalog">
+            <div class="card" data-category="shoes" data-title="Кроссовки Нумерисы">
+                <div>
+                    <div class="card-img">Фото</div>
+                    <div class="card-title">Кроссовки Нумерисы</div>
+                    <div class="badge-stock" data-i18n="in_stock">В наличии</div>
+                </div>
+                <div>
+                    <div class="card-price">4 000 сом</div>
+                    <button class="btn" onclick="addToCart('Кроссовки Нумерисы', 4000)" data-i18n="btn_cart">В корзину</button>
+                    <button class="btn btn-secondary" onclick="buyOneClick('Кроссовки Нумерисы', 4000)" data-i18n="btn_oneclick">Купить в 1 клик</button>
+                </div>
             </div>
-            <button onclick="addToCart('Baggy Jeans Denim', 350000)">В корзину</button>
+            
+            <div class="card" data-category="top" data-title="Худи Oversize Black">
+                <div>
+                    <div class="card-img">Фото</div>
+                    <div class="card-title">Худи Oversize Black</div>
+                    <div class="badge-stock" data-i18n="in_stock">В наличии</div>
+                </div>
+                <div>
+                    <div class="card-price">3 500 сом</div>
+                    <button class="btn" onclick="addToCart('Худи Oversize Black', 3500)" data-i18n="btn_cart">В корзину</button>
+                    <button class="btn btn-secondary" onclick="buyOneClick('Худи Oversize Black', 3500)" data-i18n="btn_oneclick">Купить в 1 клик</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- ЭКРАН 2: ПОИСК ПО ФОТО -->
-    <div id="photo-search-screen" class="screen">
-        <h2>📸 Найти вещь по фото</h2>
-        <p style="color: #888; font-size: 13px; margin-bottom: 12px;">Загрузите скриншот или фото вещи, и мы найдем её для вас.</p>
-        
-        <input type="file" id="photo-file" accept="image/*" onchange="handleImageUpload(event)">
-        <input type="text" id="photo-phone" placeholder="Ваш номер телефона (+998...)">
-        <textarea id="photo-address" placeholder="Адрес доставки или комментарий" rows="3"></textarea>
-        
-        <button class="btn-primary" onclick="submitPhotoSearch()">Отправить запрос</button>
-    </div>
-
-    <!-- ЭКРАН 3: КОРЗИНА -->
+    <!-- 2. ПОКУПКИ -->
     <div id="cart-screen" class="screen">
-        <h2>🛒 Корзина заказов</h2>
-        <div id="cart-items" style="margin-bottom: 16px;">Корзина пуста</div>
-        <p id="cart-total" style="font-weight: bold; margin-bottom: 16px; font-size: 16px;">Итого: 0 сум</p>
+        <div class="section-title" data-i18n="nav_purchases">Покупки</div>
         
-        <input type="text" id="order-phone" placeholder="Ваш номер телефона (+998...)">
-        <textarea id="order-address" placeholder="Адрес доставки" rows="3"></textarea>
-        
-        <button class="btn-primary" onclick="submitOrder()">Оформить заказ</button>
-    </div>
+        <div class="purchases-tabs">
+            <button class="p-tab active" onclick="switchPurchasesTab('cart', this)" data-i18n="tab_cart">Корзина</button>
+            <button class="p-tab" onclick="switchPurchasesTab('orders', this)" data-i18n="tab_orders">Заказы</button>
+            <button class="p-tab" onclick="switchPurchasesTab('photo', this)" data-i18n="tab_photo">Поиск по фото</button>
+        </div>
 
-    <!-- ЭКРАН 4: ПРОФИЛЬ -->
-    <div id="profile-screen" class="screen">
-        <h2>👤 Ваш профиль</h2>
-        <div style="background: #1a1a1a; padding: 16px; border-radius: 12px; border: 1px solid #262626;">
-            <p style="color: #ccc; margin-bottom: 6px;"><b>Магазин:</b> RAINIXSHOP</p>
-            <p style="color: #888; font-size: 14px;">Статус: Активен 🚀</p>
+        <!-- Корзина -->
+        <div id="p-sub-cart" class="p-subscreen active">
+            <div id="cart-items">
+                <div class="cart-empty" data-i18n="cart_empty">Корзина пуста<br><span style="font-size: 12px; margin-top: 4px; display:inline-block;">Перейдите в каталог и добавьте вещи</span></div>
+            </div>
+            
+            <div id="checkout-section" style="display: none;">
+                <div class="payment-box">
+                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;" data-i18n="pay_amount">Сумма к оплате:</div>
+                    <div style="color: var(--accent-color); font-size: 20px; font-weight: bold; margin-bottom: 12px;" id="total-price-text">0 сом</div>
+                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;" data-i18n="pay_card">Заказ создан. Переведите на карту:</div>
+                    <div style="color: var(--accent-color); font-size: 16px; font-weight: bold; letter-spacing: 1px; margin-bottom: 12px;">4714 7000 3652 9174</div>
+                    <div style="font-size: 12px; color: var(--text-secondary);" data-i18n="pay_instruction">После оплаты отправьте скриншот чека боту.</div>
+                </div>
+                <button class="btn" style="padding: 12px; font-size: 14px; margin-top: 16px;" onclick="checkout()" data-i18n="btn_checkout">Оформить заказ</button>
+            </div>
+        </div>
+
+        <!-- Заказы -->
+        <div id="p-sub-orders" class="p-subscreen">
+            <div class="cart-empty" data-i18n="no_orders">У вас пока нет активных заказов</div>
+        </div>
+
+        <!-- Поиск по фото с реальной загрузкой файла -->
+        <div id="p-sub-photo" class="p-subscreen">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4;" data-i18n="photo_desc">
+                Загрузите фото товара — мы найдём его, сообщим цену и доставку.
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-i18n="photo_label">Фото товара</label>
+                <!-- Скрытый инпут для выбора файла с телефона -->
+                <input type="file" id="photo-file-input" accept="image/*" style="display: none;" onchange="handlePhotoUpload(this)">
+                <button type="button" class="form-input" id="upload-btn-text" style="text-align: center; cursor: pointer; background: var(--card-bg); color: var(--text-main);" onclick="document.getElementById('photo-file-input').click()">
+                    📄 Загрузить фото
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-i18n="address_label">Адрес доставки (необязательно)</label>
+                <input type="text" id="photo-address" class="form-input" placeholder="Город, улица, дом, квартира">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-i18n="phone_label">Телефон</label>
+                <input type="text" id="photo-phone" class="form-input" placeholder="Введите ваш номер телефона">
+            </div>
+
+            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.4;" data-i18n="china_delivery_note">
+                Доставка из Китая оплачивается отдельно: по факту взвешивания или при получении. Точную стоимость продавец сообщит после оценки.
+            </div>
+
+            <button class="btn" onclick="submitPhotoSearch()" data-i18n="btn_send_request">Отправить запрос</button>
+
+            <div style="margin-top: 20px; font-size: 14px; font-weight: bold; margin-bottom: 8px;" data-i18n="my_requests">Мои запросы</div>
+            <div style="color: var(--text-secondary); font-size: 13px;" data-i18n="no_requests">Отправленных запросов пока нет.</div>
         </div>
     </div>
 
-    <!-- НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ -->
+    <!-- 3. ПРОФИЛЬ -->
+    <div id="profile-screen" class="screen">
+        <div class="section-title" data-i18n="nav_profile">Профиль</div>
+        
+        <div class="profile-card">
+            <div class="profile-header-flex">
+                <div class="profile-avatar" id="user-avatar">U</div>
+                <div>
+                    <div id="user-name" style="font-weight: bold; font-size: 16px;">Пользователь</div>
+                    <div id="user-username" style="color: var(--text-secondary); font-size: 13px; margin-top: 2px;">@username</div>
+                    <div style="color: var(--text-secondary); font-size: 12px;" id="user-id-text">Telegram ID: —</div>
+                </div>
+            </div>
+            <div style="margin-top: 12px; color: var(--accent-color); font-size: 14px; font-weight: 600;" id="bonuses-text">⭐ Бонусы: 0</div>
+        </div>
+
+        <div class="profile-card">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;" data-i18n="lang_label">Язык</div>
+            <div class="lang-switch">
+                <button class="lang-btn active" onclick="changeLanguage('ru', this)">Русский</button>
+                <button class="lang-btn" onclick="changeLanguage('en', this)">English</button>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;" data-i18n="social_label">Мы в соцсетях</div>
+            <div class="social-btns">
+                <a href="https://instagram.com" target="_blank" class="social-btn">📷 Instagram</a>
+                <a href="https://tiktok.com" target="_blank" class="social-btn">🎵 TikTok</a>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;" data-i18n="sections_label">Разделы</div>
+            <div class="menu-link-row" onclick="showToast('Карго-калькулятор в разработке')">
+                <span data-i18n="menu_calc">⚖️ Карго-калькулятор</span>
+                <span style="color: var(--text-secondary);">→</span>
+            </div>
+            <div class="menu-link-row" onclick="showToast('Rainixshop — лучший streetwear магазин!')">
+                <span data-i18n="menu_about">ℹ️ О нас</span>
+                <span style="color: var(--text-secondary);">→</span>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;" data-i18n="favorites_label">Избранное</div>
+            <div style="font-size: 13px; color: var(--text-main);" data-i18n="favorites_empty">Пока пусто. Добавляйте товары сердечком.</div>
+        </div>
+
+        <div class="profile-card" style="cursor: pointer;" onclick="showToast('Напишите нашему менеджеру в боте')">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 500;" data-i18n="menu_support">💬 Сообщения / Поддержка</span>
+                <span style="color: var(--text-secondary);">→</span>
+            </div>
+        </div>
+
+        <div style="text-align: center; color: var(--text-secondary); font-size: 12px; margin-top: 20px; margin-bottom: 10px;">
+            Разработано: <span style="color: var(--accent-color);">@rainixshop</span>
+        </div>
+    </div>
+
+    <!-- НИЖНЕЕ МЕНЮ -->
     <div class="nav-bar">
-        <div class="nav-item active" onclick="switchScreen('shop', this)">🛍<br>Магазин</div>
-        <div class="nav-item" onclick="switchScreen('photo-search', this)">📸<br>По фото</div>
-        <div class="nav-item" onclick="switchScreen('cart', this)">🛒<br>Корзина</div>
-        <div class="nav-item" onclick="switchScreen('profile', this)">👤<br>Профиль</div>
+        <button class="nav-item active" onclick="switchScreen('shop', this)">
+            <span class="icon">🏛️</span> <span data-i18n="nav_shop">Магазин</span>
+        </button>
+        <button class="nav-item" onclick="switchScreen('cart', this)" id="nav-cart-btn">
+            <span class="icon">🛍️</span> <span data-i18n="nav_purchases">Покупки</span>
+            <span class="cart-badge" id="cart-badge">0</span>
+        </button>
+        <button class="nav-item" onclick="switchScreen('profile', this)">
+            <span class="icon">👤</span> <span data-i18n="nav_profile">Профиль</span>
+        </button>
     </div>
 
     <script>
-        // Инициализация Telegram WebApp
-        const tg = window.Telegram.WebApp;
+        let tg = window.Telegram.WebApp;
         tg.expand();
 
-        let cart = [];
-        let uploadedPhotoBase64 = "";
-
-        // Уведомления (Toast)
-        function showToast(text) {
-            const toast = document.getElementById('toast');
-            toast.innerText = text;
-            toast.style.display = 'block';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 2000);
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            const user = tg.initDataUnsafe.user;
+            const firstName = user.first_name || 'Пользователь';
+            document.getElementById('user-name').innerText = firstName;
+            document.getElementById('user-avatar').innerText = firstName.charAt(0).toUpperCase();
+            document.getElementById('user-username').innerText = user.username ? '@' + user.username : 'ID: ' + user.id;
+            document.getElementById('user-id-text').innerText = 'Telegram ID: ' + user.id;
         }
 
-        // Переключение экранов
-        function switchScreen(screenName, element) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        let cart = [];
+        let currentCategory = 'all';
+        let currentLang = 'ru';
+        let uploadedPhotoBase64 = null;
 
-            const target = document.getElementById(screenName + '-screen');
-            if (target) target.classList.add('active');
-            if (element) element.classList.add('active');
+        // Словарь мультиязычности (Русский / English)
+        const i18n = {
+            ru: {
+                search_placeholder: "Поиск по названию...",
+                cat_all: "Все",
+                cat_shoes: "Обувь",
+                cat_top: "Верх",
+                cat_bottom: "Низ",
+                cat_accessories: "Аксессуары",
+                in_stock: "В наличии",
+                btn_cart: "В корзину",
+                btn_oneclick: "Купить в 1 клик",
+                nav_shop: "Магазин",
+                nav_purchases: "Покупки",
+                nav_profile: "Профиль",
+                tab_cart: "Корзина",
+                tab_orders: "Заказы",
+                tab_photo: "Поиск по фото",
+                cart_empty: "Корзина пуста",
+                pay_amount: "Сумма к оплате:",
+                pay_card: "Заказ создан. Переведите на карту:",
+                pay_instruction: "После оплаты отправьте скриншот чека боту.",
+                btn_checkout: "Оформить заказ",
+                no_orders: "У вас пока нет активных заказов",
+                photo_desc: "Загрузите фото товара — мы найдём его, сообщим цену и доставку.",
+                photo_label: "Фото товара",
+                photo_loaded: "✅ Фото прикреплено",
+                address_label: "Адрес доставки (необязательно)",
+                phone_label: "Телефон",
+                china_delivery_note: "Доставка из Китая оплачивается отдельно: по факту взвешивания или при получении. Точную стоимость продавец сообщит после оценки.",
+                btn_send_request: "Отправить запрос",
+                my_requests: "Мои запросы",
+                no_requests: "Отправленных запросов пока нет.",
+                lang_label: "Язык",
+                social_label: "Мы в соцсетях",
+                sections_label: "Разделы",
+                menu_calc: "⚖️ Карго-калькулятор",
+                menu_about: "ℹ️ О нас",
+                favorites_label: "Избранное",
+                favorites_empty: "Пока пусто. Добавляйте товары сердечком.",
+                menu_support: "💬 Сообщения / Поддержка",
+                toast_added: "добавлен в корзину",
+                toast_order_sent: "Отправка заказа в бот...",
+                toast_order_success: "Заказ успешно оформлен!",
+                toast_phone_req: "Пожалуйста, укажите номер телефона!",
+                toast_photo_sent: "Отправка запроса с фото..."
+            },
+            en: {
+                search_placeholder: "Search by title...",
+                cat_all: "All",
+                cat_shoes: "Shoes",
+                cat_top: "Top",
+                cat_bottom: "Bottom",
+                cat_accessories: "Accessories",
+                in_stock: "In stock",
+                btn_cart: "Add to cart",
+                btn_oneclick: "Buy 1-click",
+                nav_shop: "Shop",
+                nav_purchases: "Purchases",
+                nav_profile: "Profile",
+                tab_cart: "Cart",
+                tab_orders: "Orders",
+                tab_photo: "Photo Search",
+                cart_empty: "Cart is empty",
+                pay_amount: "Total amount:",
+                pay_card: "Order created. Transfer to card:",
+                pay_instruction: "After payment, send receipt screenshot to the bot.",
+                btn_checkout: "Checkout",
+                no_orders: "You have no active orders yet",
+                photo_desc: "Upload a product photo — we will find it, quote the price and shipping.",
+                photo_label: "Product Photo",
+                photo_loaded: "✅ Photo attached",
+                address_label: "Delivery address (optional)",
+                phone_label: "Phone number",
+                china_delivery_note: "China shipping is paid separately upon weighing or delivery. The exact cost will be provided after evaluation.",
+                btn_send_request: "Send request",
+                my_requests: "My requests",
+                no_requests: "No requests sent yet.",
+                lang_label: "Language",
+                social_label: "Social Media",
+                sections_label: "Sections",
+                menu_calc: "⚖️ Cargo Calculator",
+                menu_about: "ℹ️ About us",
+                favorites_label: "Favorites",
+                favorites_empty: "Empty. Add items with a heart.",
+                menu_support: "💬 Support / Messages",
+                toast_added: "added to cart",
+                toast_order_sent: "Sending order to bot...",
+                toast_order_success: "Order successfully placed!",
+                toast_phone_req: "Please enter your phone number!",
+                toast_photo_sent: "Sending request with photo..."
+            }
+        };
 
-            if (screenName === 'cart') {
-                renderCart();
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        // Переключение языка
+        function changeLanguage(lang, element) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+
+            // Применяем переводы к элементам с атрибутом data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) {
+                    el.innerText = i18n[lang][key];
+                }
+            });
+
+            // Обновляем плейсхолдеры
+            document.getElementById('search-input').placeholder = i18n[lang]['search_placeholder'];
+            document.querySelector('#p-sub-photo input[placeholder*="Город"]').placeholder = lang === 'ru' ? "Город, улица, дом, квартира" : "City, street, house, apartment";
+            document.querySelector('#p-sub-photo input[placeholder*="номер"]').placeholder = lang === 'ru' ? "Введите ваш номер телефона" : "Enter your phone number";
+
+            showToast(lang === 'ru' ? 'Язык изменен на Русский' : 'Language changed to English');
+        }
+
+        // Загрузка фото для поиска товара
+        function handlePhotoUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedPhotoBase64 = e.target.result;
+                    document.getElementById('upload-btn-text').innerText = i18n[currentLang]['photo_loaded'];
+                    showToast(currentLang === 'ru' ? 'Фото успешно прикреплено!' : 'Photo attached successfully!');
+                };
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
-        // Добавление в корзину
-        function addToCart(title, price) {
-            cart.push({ title, price });
-            showToast('Товар добавлен в корзину!');
+        function switchPurchasesTab(tabName, element) {
+            document.querySelectorAll('.p-subscreen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
+
+            if (tabName === 'cart') document.getElementById('p-sub-cart').classList.add('active');
+            if (tabName === 'orders') document.getElementById('p-sub-orders').classList.add('active');
+            if (tabName === 'photo') document.getElementById('p-sub-photo').classList.add('active');
+
+            element.classList.add('active');
         }
 
-        // Отрисовка корзины
-        function renderCart() {
+        function filterCategory(category, element) {
+            currentCategory = category;
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            applyFilters();
+        }
+
+        function filterProducts() { applyFilters(); }
+
+        function applyFilters() {
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                const category = card.getAttribute('data-category');
+                const matchesCategory = (currentCategory === 'all' || category === currentCategory);
+                const matchesSearch = title.includes(searchQuery);
+
+                card.style.display = (matchesCategory && matchesSearch) ? 'flex' : 'none';
+            });
+        }
+
+        function addToCart(title, price) {
+            cart.push({ title, price });
+            updateCartUI();
+            showToast(`"${title}" ${i18n[currentLang]['toast_added']}`);
+        }
+
+        function buyOneClick(title, price) {
+            cart = [{ title, price }];
+            updateCartUI();
+            switchScreen('cart', document.querySelectorAll('.nav-item')[1]);
+        }
+
+        function updateCartUI() {
             const container = document.getElementById('cart-items');
-            const totalElement = document.getElementById('cart-total');
+            const checkoutSection = document.getElementById('checkout-section');
+            const totalPriceText = document.getElementById('total-price-text');
+            const badge = document.getElementById('cart-badge');
+
+            if (cart.length > 0) {
+                badge.style.display = 'block';
+                badge.innerText = cart.length;
+                checkoutSection.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+                checkoutSection.style.display = 'none';
+            }
             
             if (cart.length === 0) {
-                container.innerHTML = '<p style="color: #888;">Корзина пуста</p>';
-                totalElement.innerText = 'Итого: 0 сум';
+                container.innerHTML = `<div class="cart-empty">${i18n[currentLang]['cart_empty']}<br><span style="font-size: 12px; margin-top: 4px; display:inline-block; color: var(--text-secondary);">${currentLang === 'ru' ? 'Перейдите в каталог и добавьте вещи' : 'Go to catalog and add items'}</span></div>`;
                 return;
             }
 
             let html = '';
             let total = 0;
-            cart.forEach((item) => {
-                html += `<div style="display:flex; justify-content:space-between; margin-bottom: 8px; background: #1a1a1a; padding: 10px; border-radius: 8px; border: 1px solid #262626;">
-                    <span>${item.title}</span>
-                    <span style="font-weight: 600;">${item.price} сум</span>
-                </div>`;
+            cart.forEach((item, index) => {
                 total += item.price;
+                html += `
+                    <div style="background: var(--card-bg); padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color);">
+                        <div>
+                            <div style="font-size: 14px; font-weight: 500;">${item.title}</div>
+                            <div style="color: var(--accent-color); font-size: 13px; margin-top: 4px;">${item.price} сом</div>
+                        </div>
+                        <button onclick="removeFromCart(${index})" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;">${currentLang === 'ru' ? 'Удалить' : 'Delete'}</button>
+                    </div>
+                `;
             });
-
             container.innerHTML = html;
-            totalElement.innerText = `Итого: ${total} сум`;
+            totalPriceText.innerText = `${total} сом`;
         }
 
-        // Загрузка фото в Base64
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedPhotoBase64 = e.target.result;
-                showToast('Фото загружено!');
-            };
-            reader.readAsDataURL(file);
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
         }
 
-        // Отправка обычного заказа в бота
-        function submitOrder() {
-            const phone = document.getElementById('order-phone').value;
-            const address = document.getElementById('order-address').value;
-
-            if (cart.length === 0) {
-                showToast('Корзина пуста!');
-                return;
-            }
-            if (!phone) {
-                showToast('Введите номер телефона!');
-                return;
-            }
-
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-
+        // Оформление заказа (отправка в бота)
+        function checkout() {
+            if (cart.length === 0) return;
+            
             const orderData = {
                 type: "order",
                 items: cart,
-                total: total,
-                phone: phone,
-                address: address
+                total: cart.reduce((sum, item) => sum + item.price, 0)
             };
 
-            showToast('Отправка заказа...');
+            showToast(i18n[currentLang]['toast_order_sent']);
 
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.sendData(JSON.stringify(orderData));
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
+                tg.sendData(JSON.stringify(orderData));
             } else {
-                console.log("Order test:", orderData);
-                showToast('Заказ оформлен (тест)!');
+                console.log("Заказ отправлен (тест):", orderData);
+                setTimeout(() => {
+                    showToast(i18n[currentLang]['toast_order_success']);
+                    cart = [];
+                    updateCartUI();
+                    switchScreen('shop', document.querySelectorAll('.nav-item')[0]);
+                }, 1000);
             }
         }
 
         // Отправка запроса по фото в бота
         function submitPhotoSearch() {
-            const phone = document.getElementById('photo-phone').value;
             const address = document.getElementById('photo-address').value;
+            const phone = document.getElementById('photo-phone').value;
 
             if (!phone) {
-                showToast('Введите номер телефона!');
+                showToast(i18n[currentLang]['toast_phone_req']);
                 return;
             }
 
-            const searchData = {
+            const searchRequestData = {
                 type: "photo_search",
                 photo: uploadedPhotoBase64,
-                phone: phone,
-                address: address
+                address: address,
+                phone: phone
             };
 
-            showToast('Отправка запроса...');
+            showToast(i18n[currentLang]['toast_photo_sent']);
 
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.sendData(JSON.stringify(searchData));
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
+                tg.sendData(JSON.stringify(searchRequestData));
             } else {
-                console.log("Photo search test:", searchData);
-                showToast('Запрос отправлен (тест)!');
+                console.log("Запрос по фото отправлен (тест):", searchRequestData);
+                setTimeout(() => {
+                    showToast(currentLang === 'ru' ? 'Запрос успешно отправлен!' : 'Request sent successfully!');
+                    switchScreen('shop', document.querySelectorAll('.nav-item')[0]);
+                }, 1000);
             }
+        }
+
+        function switchScreen(screenName, element) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            if (screenName === 'shop') document.getElementById('shop-screen').classList.add('active');
+            if (screenName === 'cart') document.getElementById('cart-screen').classList.add('active');
+            if (screenName === 'profile') document.getElementById('profile-screen').classList.add('active');
+
+            element.classList.add('active');
         }
     </script>
 </body>
