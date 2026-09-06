@@ -9,12 +9,16 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-color: #38bdf8;
-            --border-color: #334155;
+            --bg-color: #080b14;
+            --card-bg: #111625;
+            --card-bg-2: #151b2b;
+            --text-main: #f7f4f7;
+            --text-secondary: #9da3b5;
+            --accent-color: #ff5f9a;
+            --accent-soft: #ff8fb6;
+            --navy-accent: #6e7cff;
+            --border-color: #252c40;
+            --border-soft: rgba(255,255,255,.07);
         }
 
         body {
@@ -390,14 +394,158 @@
             transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
+
+
+        /* RAINIXSHOP — autumn night redesign */
+        * { box-sizing: border-box; }
+        html { background: var(--bg-color); }
+        body {
+            background:
+                radial-gradient(circle at 10% -5%, rgba(255,95,154,.10), transparent 30%),
+                radial-gradient(circle at 90% 0%, rgba(110,124,255,.10), transparent 28%),
+                var(--bg-color);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        .screen { max-width: 620px; margin: 0 auto; padding: 14px 14px 92px; }
+        .brand-header {
+            display:flex; align-items:center; justify-content:space-between;
+            padding: 8px 2px 16px; margin-bottom: 2px;
+        }
+        .brand-logo { font-size: 23px; font-weight: 800; letter-spacing: 2.2px; }
+        .brand-logo .ix { color: var(--accent-color); }
+        .brand-mark {
+            width:34px; height:34px; border:1px solid var(--border-color);
+            border-radius:11px; display:grid; place-items:center;
+            color:var(--accent-color); background:rgba(255,255,255,.025);
+            font-weight:800; font-size:14px;
+        }
+        .catalog-heading { margin: 4px 2px 12px; font-size: 22px; font-weight: 800; letter-spacing: -.3px; }
+        .search-box { margin-bottom: 10px; position:relative; }
+        .search-box::before { content:'⌕'; position:absolute; left:14px; top:7px; color:var(--text-secondary); font-size:20px; z-index:1; }
+        .form-input {
+            padding: 12px 14px 12px 40px; background: rgba(17,22,37,.92);
+            border:1px solid var(--border-color); border-radius:14px; color:var(--text-main);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+        }
+        .form-input:focus { border-color: rgba(255,95,154,.7); box-shadow:0 0 0 3px rgba(255,95,154,.08); }
+        .categories { gap:8px; margin-bottom:14px; padding:2px 0 4px; }
+        .cat-btn {
+            background:var(--card-bg); border-color:var(--border-color); padding:8px 14px;
+            border-radius:12px; font-size:12px; font-weight:600;
+        }
+        .cat-btn.active { background:var(--accent-color); color:#160b12; border-color:var(--accent-color); box-shadow:0 6px 18px rgba(255,95,154,.16); }
+        .products-grid { gap:10px; }
+        .card {
+            background:linear-gradient(180deg, rgba(21,27,43,.98), rgba(14,18,30,.98));
+            border:1px solid var(--border-color); border-radius:16px;
+            box-shadow:0 8px 24px rgba(0,0,0,.16); transition:transform .18s ease,border-color .18s ease;
+        }
+        .card:active { transform:scale(.985); }
+        .card-img-wrap {
+            height:172px; background:
+                radial-gradient(circle at 30% 25%, rgba(255,95,154,.16), transparent 35%),
+                linear-gradient(145deg,#1c2437,#0e1320);
+            color:#aeb4c5; font-size:42px;
+        }
+        .card-body { padding:11px; }
+        .card-title { font-size:13px; font-weight:650; margin-bottom:5px; }
+        .card-price { color:var(--accent-color); font-size:15px; margin-bottom:9px; }
+        .card-actions { gap:7px; }
+        .btn-card { padding:8px 0; border-radius:9px; font-size:11px; }
+        .btn-add-cart { background:#1c2334; border:1px solid var(--border-color); }
+        .btn-buy-one { background:var(--accent-color); color:#160b12; }
+        .nav-bar {
+            height:68px; max-width:620px; margin:auto; left:0; right:0; bottom:0;
+            background:rgba(8,11,20,.94); border-top:1px solid var(--border-color);
+            backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); padding-bottom:4px;
+        }
+        .nav-item { font-size:10px; gap:4px; }
+        .nav-item .icon { font-size:20px; line-height:20px; filter:grayscale(1); opacity:.75; }
+        .nav-item.active .icon { filter:none; opacity:1; }
+        .nav-item.active { color:var(--accent-color); font-weight:700; }
+        .cart-badge { background:var(--accent-color); color:#160b12; font-weight:800; top:0; right:29%; }
+        .section-title { font-size:21px; margin:6px 2px 14px; }
+        .profile-card {
+            background:linear-gradient(145deg,rgba(21,27,43,.96),rgba(14,18,30,.96));
+            border:1px solid var(--border-color); border-radius:16px; padding:15px; margin-bottom:10px;
+        }
+        .profile-avatar { background:linear-gradient(135deg,var(--accent-color),#7a6cff); color:#fff; box-shadow:0 8px 20px rgba(255,95,154,.18); }
+        .lang-btn, .social-btn { border-radius:11px; background:#0d1220; border-color:var(--border-color); }
+        .lang-btn.active { background:var(--accent-color); color:#160b12; border-color:var(--accent-color); }
+        .menu-link-row { padding:12px 0; border-bottom-color:var(--border-soft); }
+        .purchases-tabs {
+            background:rgba(17,22,37,.8); border:1px solid var(--border-color); border-radius:14px; padding:4px; gap:4px;
+        }
+        .p-tab { border:0; border-radius:10px; padding:10px 5px; background:transparent; }
+        .p-tab.active { background:var(--accent-color); color:#160b12; }
+        .cart-empty { padding:56px 20px; }
+        .btn { background:var(--accent-color); color:#160b12; border-radius:13px; padding:13px; box-shadow:0 8px 22px rgba(255,95,154,.16); }
+        #toast { background:#151b2b; border-color:rgba(255,95,154,.6); box-shadow:0 12px 35px rgba(0,0,0,.4); }
+        @media (max-width:430px) {
+            .screen { padding-left:10px; padding-right:10px; }
+            .card-img-wrap { height:155px; }
+            .brand-logo { font-size:21px; }
+        }
+    
+/* === RAINIXSHOP PAYMENT — added without changing existing design === */
+.payment-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:2000;display:none;align-items:flex-end;justify-content:center;padding:10px}
+.payment-overlay.show{display:flex}
+.payment-modal{width:100%;max-width:620px;max-height:90vh;overflow-y:auto;background:linear-gradient(145deg,#151b2b,#0e121e);border:1px solid #30384e;border-radius:20px;padding:18px;box-shadow:0 20px 70px rgba(0,0,0,.55)}
+.payment-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}.payment-title{font-size:20px;font-weight:800}.payment-close{width:34px;height:34px;border:1px solid #30384e;border-radius:10px;background:#0d1220;color:#fff;font-size:20px;cursor:pointer}
+.payment-total{display:flex;justify-content:space-between;align-items:center;background:#0d1220;border:1px solid #252c40;border-radius:14px;padding:13px;margin-bottom:14px}.payment-total strong{color:#ff5f9a;font-size:18px}
+.payment-label{display:block;color:#9da3b5;font-size:12px;margin:0 0 5px}.payment-input{width:100%;padding:12px 13px;background:#0d1220;border:1px solid #252c40;border-radius:12px;color:#f7f4f7;outline:none;font-size:14px;box-sizing:border-box;margin-bottom:12px}.payment-input:focus{border-color:#ff5f9a;box-shadow:0 0 0 3px rgba(255,95,154,.08)}
+.payment-cards{display:grid;gap:8px;margin-bottom:14px}.payment-card{background:#0d1220;border:1px solid #252c40;border-radius:14px;padding:12px}.payment-bank{font-size:12px;color:#9da3b5;margin-bottom:5px}.payment-number{font-size:16px;font-weight:800;letter-spacing:1px}.payment-owner{font-size:11px;color:#9da3b5;margin-top:4px}
+.receipt-box{border:1px dashed #3a435a;border-radius:14px;padding:14px;background:#0d1220;margin-bottom:14px}.receipt-button{width:100%;padding:12px;border-radius:11px;background:#151b2b;border:1px solid #30384e;color:#f7f4f7;cursor:pointer;font-size:13px}.receipt-name{font-size:12px;color:#ff8fb6;margin-top:8px;word-break:break-all}
+.payment-note{font-size:11px;line-height:1.45;color:#9da3b5;margin:-4px 0 12px}.payment-send{width:100%;padding:13px;border:0;border-radius:13px;background:#ff5f9a;color:#160b12;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 8px 22px rgba(255,95,154,.16)}.payment-send:disabled{opacity:.55;cursor:not-allowed}
+@media (min-width:621px){.payment-overlay{align-items:center}.payment-modal{max-height:88vh}}
+
     </style>
 </head>
 <body>
 
     <div id="toast">Уведомление</div>
 
+    <!-- ОКНО ОПЛАТЫ -->
+    <div id="payment-overlay" class="payment-overlay" onclick="if(event.target===this) closePaymentModal()">
+        <div class="payment-modal">
+            <div class="payment-head">
+                <div class="payment-title">Оформление заказа</div>
+                <button class="payment-close" type="button" onclick="closePaymentModal()">×</button>
+            </div>
+            <div class="payment-total">
+                <span>К оплате</span>
+                <strong id="payment-total">0 сом</strong>
+            </div>
+            <div style="font-size:14px;font-weight:700;margin-bottom:8px;">Оплата на карту</div>
+            <div id="payment-cards" class="payment-cards">
+                <div style="color:#9da3b5;font-size:13px;padding:8px 0;">Загрузка карт...</div>
+            </div>
+            <div class="form-group">
+                <label class="payment-label">Телефон *</label>
+                <input id="payment-phone" class="payment-input" type="tel" placeholder="Введите ваш номер телефона">
+                <label class="payment-label">Адрес доставки</label>
+                <input id="payment-address" class="payment-input" type="text" placeholder="Город, улица, дом, квартира">
+            </div>
+            <div class="receipt-box">
+                <label class="payment-label">Чек об оплате *</label>
+                <input id="receipt-file" type="file" accept="image/*,application/pdf" style="display:none" onchange="handleReceiptUpload(this)">
+                <button class="receipt-button" type="button" onclick="document.getElementById('receipt-file').click()">📎 Прикрепить чек</button>
+                <div id="receipt-name" class="receipt-name">Чек ещё не выбран</div>
+            </div>
+            <div class="payment-note">После отправки чек и данные заказа будут переданы менеджеру для проверки оплаты.</div>
+            <button id="payment-send-btn" class="payment-send" type="button" onclick="submitPaymentOrder()">Я оплатил — отправить чек</button>
+        </div>
+    </div>
+
+
     <!-- 1. МАГАЗИН (КАТАЛОГ) -->
     <div id="shop-screen" class="screen active">
+        <div class="brand-header">
+            <div class="brand-logo">RAIN<span class="ix">IX</span>SHOP</div>
+            <div class="brand-mark">RX</div>
+        </div>
+        <div class="catalog-heading">Каталог</div>
         <div class="search-box">
             <input type="text" id="search-input" class="form-input" placeholder="Поиск по названию..." oninput="filterProducts()">
         </div>
@@ -512,7 +660,7 @@
                 <!-- Скрытый инпут для выбора файла с телефона -->
                 <input type="file" id="photo-file-input" accept="image/*" style="display: none;" onchange="handlePhotoUpload(this)">
                 <button type="button" class="form-input" id="upload-btn-text" style="text-align: center; cursor: pointer; background: var(--card-bg); color: var(--text-main);" onclick="document.getElementById('photo-file-input').click()">
-                    📄 Загрузить фото
+                    Добавить фото
                 </button>
             </div>
 
@@ -534,34 +682,6 @@
 
             <div style="margin-top: 20px; font-size: 14px; font-weight: bold; margin-bottom: 8px;" data-i18n="my_requests">Мои запросы</div>
             <div style="color: var(--text-secondary); font-size: 13px;" data-i18n="no_requests">Отправленных запросов пока нет.</div>
-        </div>
-    </div>
-
-    <!-- ОКНО ОПЛАТЫ -->
-    <div id="checkout-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.72); z-index:900; padding:16px; box-sizing:border-box; overflow:auto;">
-        <div style="max-width:520px; margin:30px auto; background:var(--card-bg); border:1px solid var(--border-color); border-radius:14px; padding:16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                <div style="font-size:18px; font-weight:700;">Оформление заказа</div>
-                <button onclick="closeCheckout()" style="background:none;border:none;color:var(--text-secondary);font-size:24px;cursor:pointer;">×</button>
-            </div>
-            <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">Переведите сумму на одну из карт:</div>
-            <div id="payment-cards-list"><div style="color:var(--text-secondary);font-size:13px;">Загрузка карт...</div></div>
-            <div class="form-group" style="margin-top:14px;">
-                <label class="form-label">Телефон *</label>
-                <input id="checkout-phone" class="form-input" type="text" placeholder="Введите номер телефона">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Адрес доставки</label>
-                <input id="checkout-address" class="form-input" type="text" placeholder="Город, улица, дом, квартира">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Чек об оплате *</label>
-                <input id="receipt-file" type="file" accept="image/*,application/pdf" style="display:none" onchange="handleReceiptUpload(this)">
-                <button type="button" class="form-input" onclick="document.getElementById('receipt-file').click()" id="receipt-btn" style="text-align:center;cursor:pointer;">📎 Загрузить чек</button>
-                <div id="receipt-name" style="font-size:11px;color:var(--text-secondary);margin-top:5px;"></div>
-            </div>
-            <div style="font-size:12px;color:var(--text-secondary);margin:10px 0;">После оплаты отправьте чек — заказ поступит менеджеру на проверку.</div>
-            <button class="btn" onclick="submitPaidOrder()">Я оплатил — отправить чек</button>
         </div>
     </div>
 
@@ -592,8 +712,8 @@
         <div class="profile-card">
             <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;" data-i18n="social_label">Мы в соцсетях</div>
             <div class="social-btns">
-                <a href="https://instagram.com" target="_blank" class="social-btn">📷 Instagram</a>
-                <a href="https://tiktok.com" target="_blank" class="social-btn">🎵 TikTok</a>
+                <a href="https://instagram.com" target="_blank" class="social-btn">Instagram</a>
+                <a href="https://tiktok.com" target="_blank" class="social-btn">TikTok</a>
             </div>
         </div>
 
@@ -629,14 +749,14 @@
     <!-- НИЖНЕЕ МЕНЮ -->
     <div class="nav-bar">
         <button class="nav-item active" onclick="switchScreen('shop', this)">
-            <span class="icon">🏛️</span> <span data-i18n="nav_shop">Магазин</span>
+            <span class="icon">⌂</span> <span data-i18n="nav_shop">Магазин</span>
         </button>
         <button class="nav-item" onclick="switchScreen('cart', this)" id="nav-cart-btn">
-            <span class="icon">🛍️</span> <span data-i18n="nav_purchases">Покупки</span>
+            <span class="icon">▢</span> <span data-i18n="nav_purchases">Покупки</span>
             <span class="cart-badge" id="cart-badge">0</span>
         </button>
         <button class="nav-item" onclick="switchScreen('profile', this)">
-            <span class="icon">👤</span> <span data-i18n="nav_profile">Профиль</span>
+            <span class="icon">◯</span> <span data-i18n="nav_profile">Профиль</span>
         </button>
     </div>
 
@@ -881,42 +1001,54 @@
             updateCartUI();
         }
 
-        // Оформление заказа
-        let PAYMENT_CARDS = [];
+        // Оформление заказа — открываем окно оплаты
+        let paymentCards = [];
         let selectedReceiptBase64 = null;
         let selectedReceiptName = '';
         let selectedReceiptType = '';
 
         async function loadPaymentCards() {
+            const container = document.getElementById('payment-cards');
             try {
                 const response = await fetch('https://rainixshop-server.onrender.com/api/payment-cards');
                 const result = await response.json();
-                PAYMENT_CARDS = Array.isArray(result.cards) ? result.cards : [];
-                const box = document.getElementById('payment-cards-list');
-                if (!PAYMENT_CARDS.length) {
-                    box.innerHTML = '<div style="color:#ef4444;font-size:13px;">Карты пока не настроены.</div>';
+                paymentCards = Array.isArray(result.cards) ? result.cards : [];
+                if (!paymentCards.length) {
+                    container.innerHTML = '<div style="color:#9da3b5;font-size:13px;padding:8px 0;">Карты пока не добавлены.</div>';
                     return;
                 }
-                box.innerHTML = PAYMENT_CARDS.map(card => `
-                    <div style="background:var(--bg-color);border:1px solid var(--border-color);border-radius:10px;padding:12px;margin-bottom:8px;">
-                        <div style="font-weight:700;font-size:14px;">${card.bank || 'Банк'}</div>
-                        <div style="font-size:16px;margin-top:5px;letter-spacing:1px;">${card.number}</div>
-                        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">${card.owner || ''}</div>
+                container.innerHTML = paymentCards.map(card => `
+                    <div class="payment-card">
+                        <div class="payment-bank">${escapeHtml(card.bank || 'Банк')}</div>
+                        <div class="payment-number">${escapeHtml(card.number || '')}</div>
+                        <div class="payment-owner">Получатель: ${escapeHtml(card.owner || 'RAINIXSHOP')}</div>
                     </div>
                 `).join('');
-            } catch (e) {
-                document.getElementById('payment-cards-list').innerHTML = '<div style="color:#ef4444;font-size:13px;">Не удалось загрузить карты.</div>';
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = '<div style="color:#ff8fb6;font-size:13px;padding:8px 0;">Не удалось загрузить карты. Попробуйте ещё раз.</div>';
             }
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
         }
 
         function checkout() {
             if (cart.length === 0) return;
-            document.getElementById('checkout-modal').style.display = 'block';
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('payment-total').innerText = `${total.toLocaleString('ru-RU')} сом`;
+            document.getElementById('payment-overlay').classList.add('show');
+            selectedReceiptBase64 = null;
+            selectedReceiptName = '';
+            selectedReceiptType = '';
+            document.getElementById('receipt-file').value = '';
+            document.getElementById('receipt-name').innerText = 'Чек ещё не выбран';
             loadPaymentCards();
         }
 
-        function closeCheckout() {
-            document.getElementById('checkout-modal').style.display = 'none';
+        function closePaymentModal() {
+            document.getElementById('payment-overlay').classList.remove('show');
         }
 
         function handleReceiptUpload(input) {
@@ -928,29 +1060,31 @@
                 return;
             }
             const reader = new FileReader();
-            reader.onload = e => {
+            reader.onload = function(e) {
                 selectedReceiptBase64 = e.target.result;
                 selectedReceiptName = file.name;
                 selectedReceiptType = file.type || 'application/octet-stream';
                 document.getElementById('receipt-name').innerText = '✅ ' + file.name;
-                document.getElementById('receipt-btn').innerText = '📎 Чек прикреплён';
             };
             reader.readAsDataURL(file);
         }
 
-        async function submitPaidOrder() {
-            const phone = document.getElementById('checkout-phone').value.trim();
-            const address = document.getElementById('checkout-address').value.trim();
+        async function submitPaymentOrder() {
+            if (cart.length === 0) return;
+            const phone = document.getElementById('payment-phone').value.trim();
+            const address = document.getElementById('payment-address').value.trim();
+            const button = document.getElementById('payment-send-btn');
+            const user = tg.initDataUnsafe?.user;
+
             if (!phone) {
-                showToast(i18n[currentLang]['toast_phone_req']);
+                showToast('Пожалуйста, укажите номер телефона!');
                 return;
             }
             if (!selectedReceiptBase64) {
-                showToast('Пожалуйста, загрузите чек!');
+                showToast('Пожалуйста, прикрепите чек!');
                 return;
             }
 
-            const user = tg.initDataUnsafe?.user;
             const total = cart.reduce((sum, item) => sum + item.price, 0);
             const orderData = {
                 items: cart,
@@ -960,11 +1094,14 @@
                 username: user?.username ? '@' + user.username : 'Не указан',
                 telegram_id: user?.id || 'Не указан',
                 receipt: selectedReceiptBase64,
-                receipt_name: selectedReceiptName,
-                receipt_type: selectedReceiptType
+                receipt_name: selectedReceiptName || 'receipt',
+                receipt_type: selectedReceiptType || 'application/octet-stream'
             };
 
-            showToast('Отправляем чек...');
+            button.disabled = true;
+            button.innerText = 'Отправляем...';
+            showToast('Отправляем заказ...');
+
             try {
                 const response = await fetch('https://rainixshop-server.onrender.com/api/order-payment', {
                     method: 'POST',
@@ -972,55 +1109,116 @@
                     body: JSON.stringify(orderData)
                 });
                 const result = await response.json();
-                if (!result.success) throw new Error(result.error || 'Ошибка');
 
-                showToast('✅ Чек отправлен менеджеру!');
+                if (!result.success) {
+                    showToast('❌ ' + (result.error || 'Не удалось отправить заказ'));
+                    return;
+                }
+
+                showToast('✅ Заказ успешно оформлен!');
+                closePaymentModal();
                 cart = [];
                 updateCartUI();
-                closeCheckout();
-                document.getElementById('checkout-phone').value = '';
-                document.getElementById('checkout-address').value = '';
-                document.getElementById('receipt-file').value = '';
-                document.getElementById('receipt-name').innerText = '';
-                document.getElementById('receipt-btn').innerText = '📎 Загрузить чек';
+                document.getElementById('payment-phone').value = '';
+                document.getElementById('payment-address').value = '';
                 selectedReceiptBase64 = null;
                 selectedReceiptName = '';
                 selectedReceiptType = '';
+                document.getElementById('receipt-file').value = '';
+                document.getElementById('receipt-name').innerText = 'Чек ещё не выбран';
+                switchScreen('cart', document.querySelectorAll('.nav-item')[1]);
+                switchPurchasesTab('orders', document.querySelectorAll('.p-tab')[1]);
             } catch (error) {
                 console.error(error);
-                showToast('❌ Не удалось отправить чек');
+                showToast('❌ Ошибка соединения с сервером');
+            } finally {
+                button.disabled = false;
+                button.innerText = 'Я оплатил — отправить чек';
             }
         }
 
         // Отправка запроса по фото в бота
-        function submitPhotoSearch() {
-            const address = document.getElementById('photo-address').value;
-            const phone = document.getElementById('photo-phone').value;
+        async function submitPhotoSearch() {
+    const address = document.getElementById('photo-address').value;
+    const phone = document.getElementById('photo-phone').value;
 
-            if (!phone) {
-                showToast(i18n[currentLang]['toast_phone_req']);
-                return;
+    if (!phone) {
+        showToast(i18n[currentLang]['toast_phone_req']);
+        return;
+    }
+
+    if (!uploadedPhotoBase64) {
+        showToast(currentLang === 'ru'
+            ? 'Пожалуйста, загрузите фото!'
+            : 'Please upload a photo!');
+        return;
+    }
+
+    const user = tg.initDataUnsafe?.user;
+
+    const searchRequestData = {
+        photo: uploadedPhotoBase64,
+        address: address,
+        phone: phone,
+        username: user?.username ? '@' + user.username : 'Не указан',
+        telegram_id: user?.id || 'Не указан'
+    };
+
+    showToast(
+        currentLang === 'ru'
+            ? 'Отправляем запрос...'
+            : 'Sending request...'
+    );
+
+    try {
+        const response = await fetch(
+            'https://rainixshop-server.onrender.com/api/photo-search',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(searchRequestData)
             }
+        );
 
-            const searchRequestData = {
-                type: "photo_search",
-                photo: uploadedPhotoBase64,
-                address: address,
-                phone: phone
-            };
+        const result = await response.json();
 
-            showToast(i18n[currentLang]['toast_photo_sent']);
+        if (result.success) {
+            showToast(
+                currentLang === 'ru'
+                    ? '✅ Запрос успешно отправлен!'
+                    : '✅ Request sent successfully!'
+            );
 
-            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
-                tg.sendData(JSON.stringify(searchRequestData));
-            } else {
-                console.log("Запрос по фото отправлен (тест):", searchRequestData);
-                setTimeout(() => {
-                    showToast(currentLang === 'ru' ? 'Запрос успешно отправлен!' : 'Request sent successfully!');
-                    switchScreen('shop', document.querySelectorAll('.nav-item')[0]);
-                }, 1000);
-            }
+            document.getElementById('photo-phone').value = '';
+            document.getElementById('photo-address').value = '';
+            document.getElementById('photo-file-input').value = '';
+            uploadedPhotoBase64 = null;
+
+            document.getElementById('upload-btn-text').innerText =
+                currentLang === 'ru'
+                    ? 'Добавить фото'
+                    : '📄 Upload photo';
+
+        } else {
+            showToast(
+                currentLang === 'ru'
+                    ? '❌ Не удалось отправить запрос'
+                    : '❌ Failed to send request'
+            );
         }
+
+    } catch (error) {
+        console.error(error);
+
+        showToast(
+            currentLang === 'ru'
+                ? '❌ Ошибка соединения с сервером'
+                : '❌ Server connection error'
+        );
+    }
+}
 
         function switchScreen(screenName, element) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
