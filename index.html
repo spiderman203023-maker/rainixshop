@@ -7,14 +7,14 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: #0c0c0e;          /* Глубокий черный фон */
-            --card-bg: #161619;           /* Карточки */
-            --accent-color: #d4b59d;      /* Стильный мягкий бежевый */
+            --bg-color: #0c0c0e;          
+            --card-bg: #161619;           
+            --accent-color: #d4b59d;      
             --accent-dark: #b8977e;       
             --accent-glow: rgba(212, 181, 157, 0.25);
-            --text-main: #f5f2ed;         /* Теплый текст */
-            --text-secondary: #99938d;    /* Серый с бежевым отливом */
-            --border-color: #262529;      /* Границы */
+            --text-main: #f5f2ed;         
+            --text-secondary: #99938d;    
+            --border-color: #262529;      
             --success-color: #22c55e;
         }
 
@@ -27,7 +27,6 @@
             padding-bottom: 90px;
         }
 
-        /* Стильное всплывающее уведомление сверху */
         #toast {
             position: fixed;
             top: -100px;
@@ -46,14 +45,9 @@
             max-width: 90%;
             box-sizing: border-box;
         }
-        #toast.show {
-            top: 20px;
-        }
+        #toast.show { top: 20px; }
 
-        .header {
-            text-align: center;
-            margin-bottom: 16px;
-        }
+        .header { text-align: center; margin-bottom: 16px; }
         .logo {
             color: var(--accent-color);
             font-size: 24px;
@@ -62,11 +56,7 @@
             text-shadow: 0 0 15px var(--accent-glow);
             margin: 0;
         }
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 13px;
-            margin-top: 4px;
-        }
+        .subtitle { color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
 
         .search-box {
             width: 100%;
@@ -133,22 +123,10 @@
             font-size: 12px;
             margin-bottom: 8px;
         }
-        .card-title {
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-        .card-price {
-            color: var(--accent-color);
-            font-weight: 700;
-            font-size: 14px;
-            margin-bottom: 6px;
-        }
-        .badge-stock {
-            color: var(--success-color);
-            font-size: 11px;
-            margin-bottom: 8px;
-        }
+        .card-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+        .card-price { color: var(--accent-color); font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+        .badge-stock { color: var(--success-color); font-size: 11px; margin-bottom: 8px; }
+        
         .btn {
             background-color: var(--accent-color);
             color: #0c0c0e;
@@ -162,15 +140,9 @@
             margin-bottom: 4px;
             transition: 0.2s;
         }
-        .btn:active {
-            background-color: var(--accent-dark);
-        }
-        .btn-secondary {
-            background-color: #222126;
-            color: var(--text-main);
-        }
+        .btn:active { background-color: var(--accent-dark); }
+        .btn-secondary { background-color: #222126; color: var(--text-main); }
 
-        /* Переключатель вкладок внутри «Покупок» */
         .purchases-tabs {
             display: flex;
             background-color: var(--card-bg);
@@ -198,16 +170,8 @@
             font-weight: 700;
         }
 
-        /* Форма поиска по фото */
-        .form-group {
-            margin-bottom: 12px;
-        }
-        .form-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            display: block;
-        }
+        .form-group { margin-bottom: 12px; }
+        .form-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; display: block; }
         .form-input {
             width: 100%;
             padding: 12px 14px;
@@ -221,7 +185,6 @@
         }
         .form-input:focus { border-color: var(--accent-color); }
 
-        /* Профиль */
         .profile-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -229,11 +192,7 @@
             padding: 14px;
             margin-bottom: 12px;
         }
-        .profile-header-flex {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
+        .profile-header-flex { display: flex; align-items: center; gap: 14px; }
         .profile-avatar {
             width: 50px;
             height: 50px;
@@ -246,11 +205,7 @@
             align-items: center;
             justify-content: center;
         }
-        .social-btns {
-            display: flex;
-            gap: 10px;
-            margin-top: 8px;
-        }
+        .social-btns { display: flex; gap: 10px; margin-top: 8px; }
         .social-btn {
             flex: 1;
             background: #1f1e24;
@@ -278,6 +233,7 @@
         }
         .menu-link-row:last-child { border-bottom: none; padding-bottom: 0; }
         .menu-link-row:first-child { padding-top: 0; }
+        
         .lang-switch { display: flex; gap: 6px; margin-top: 6px; }
         .lang-btn {
             background: #1f1e24;
@@ -340,16 +296,8 @@
         .p-subscreen { display: none; }
         .p-subscreen.active { display: block; }
 
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 14px;
-        }
-        .cart-empty {
-            text-align: center;
-            color: var(--text-secondary);
-            margin-top: 40px;
-        }
+        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 14px; }
+        .cart-empty { text-align: center; color: var(--text-secondary); margin-top: 40px; }
         .payment-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -361,7 +309,6 @@
 </head>
 <body>
 
-    <!-- Всплывающее зеленое уведомление сверху -->
     <div id="toast">Успешно!</div>
 
     <div class="header">
@@ -374,11 +321,11 @@
         <input type="text" id="search-input" class="search-box" placeholder="Поиск по названию..." oninput="filterProducts()">
         
         <div class="categories">
-            <button class="cat-btn active" onclick="filterCategory('all', this)">Все</button>
-            <button class="cat-btn" onclick="filterCategory('shoes', this)">Обувь</button>
-            <button class="cat-btn" onclick="filterCategory('top', this)">Верх</button>
-            <button class="cat-btn" onclick="filterCategory('bottom', this)">Низ</button>
-            <button class="cat-btn" onclick="filterCategory('accessories', this)">Аксессуары</button>
+            <button class="cat-btn active" onclick="filterCategory('all', this)" data-i18n="cat_all">Все</button>
+            <button class="cat-btn" onclick="filterCategory('shoes', this)" data-i18n="cat_shoes">Обувь</button>
+            <button class="cat-btn" onclick="filterCategory('top', this)" data-i18n="cat_top">Верх</button>
+            <button class="cat-btn" onclick="filterCategory('bottom', this)" data-i18n="cat_bottom">Низ</button>
+            <button class="cat-btn" onclick="filterCategory('accessories', this)" data-i18n="cat_accessories">Аксессуары</button>
         </div>
 
         <div class="catalog" id="product-catalog">
@@ -386,12 +333,12 @@
                 <div>
                     <div class="card-img">Фото</div>
                     <div class="card-title">Кроссовки Нумерисы</div>
-                    <div class="badge-stock">В наличии</div>
+                    <div class="badge-stock" data-i18n="in_stock">В наличии</div>
                 </div>
                 <div>
                     <div class="card-price">4 000 сом</div>
-                    <button class="btn" onclick="addToCart('Кроссовки Нумерисы', 4000)">В корзину</button>
-                    <button class="btn btn-secondary" onclick="buyOneClick('Кроссовки Нумерисы', 4000)">Купить в 1 клик</button>
+                    <button class="btn" onclick="addToCart('Кроссовки Нумерисы', 4000)" data-i18n="btn_cart">В корзину</button>
+                    <button class="btn btn-secondary" onclick="buyOneClick('Кроссовки Нумерисы', 4000)" data-i18n="btn_oneclick">Купить в 1 клик</button>
                 </div>
             </div>
             
@@ -399,88 +346,89 @@
                 <div>
                     <div class="card-img">Фото</div>
                     <div class="card-title">Худи Oversize Black</div>
-                    <div class="badge-stock">В наличии</div>
+                    <div class="badge-stock" data-i18n="in_stock">В наличии</div>
                 </div>
                 <div>
                     <div class="card-price">3 500 сом</div>
-                    <button class="btn" onclick="addToCart('Худи Oversize Black', 3500)">В корзину</button>
-                    <button class="btn btn-secondary" onclick="buyOneClick('Худи Oversize Black', 3500)">Купить в 1 клик</button>
+                    <button class="btn" onclick="addToCart('Худи Oversize Black', 3500)" data-i18n="btn_cart">В корзину</button>
+                    <button class="btn btn-secondary" onclick="buyOneClick('Худи Oversize Black', 3500)" data-i18n="btn_oneclick">Купить в 1 клик</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 2. ПОКУПКИ (С подвкладками: Корзина, Заказы, Поиск по фото) -->
+    <!-- 2. ПОКУПКИ -->
     <div id="cart-screen" class="screen">
-        <div class="section-title">Покупки</div>
+        <div class="section-title" data-i18n="nav_purchases">Покупки</div>
         
-        <!-- Переключатель вкладок внутри покупок -->
         <div class="purchases-tabs">
-            <button class="p-tab active" onclick="switchPurchasesTab('cart', this)">Корзина</button>
-            <button class="p-tab" onclick="switchPurchasesTab('orders', this)">Заказы</button>
-            <button class="p-tab" onclick="switchPurchasesTab('photo', this)">Поиск по фото</button>
+            <button class="p-tab active" onclick="switchPurchasesTab('cart', this)" data-i18n="tab_cart">Корзина</button>
+            <button class="p-tab" onclick="switchPurchasesTab('orders', this)" data-i18n="tab_orders">Заказы</button>
+            <button class="p-tab" onclick="switchPurchasesTab('photo', this)" data-i18n="tab_photo">Поиск по фото</button>
         </div>
 
-        <!-- Подвкладка 1: Корзина -->
+        <!-- Корзина -->
         <div id="p-sub-cart" class="p-subscreen active">
             <div id="cart-items">
-                <div class="cart-empty">Корзина пуста<br><span style="font-size: 12px; margin-top: 4px; display:inline-block;">Перейдите в каталог и добавьте вещи</span></div>
+                <div class="cart-empty" data-i18n="cart_empty">Корзина пуста<br><span style="font-size: 12px; margin-top: 4px; display:inline-block;">Перейдите в каталог и добавьте вещи</span></div>
             </div>
             
             <div id="checkout-section" style="display: none;">
                 <div class="payment-box">
-                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Сумма к оплате:</div>
+                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;" data-i18n="pay_amount">Сумма к оплате:</div>
                     <div style="color: var(--accent-color); font-size: 20px; font-weight: bold; margin-bottom: 12px;" id="total-price-text">0 сом</div>
-                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Заказ создан. Переведите на карту:</div>
+                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;" data-i18n="pay_card">Заказ создан. Переведите на карту:</div>
                     <div style="color: var(--accent-color); font-size: 16px; font-weight: bold; letter-spacing: 1px; margin-bottom: 12px;">4714 7000 3652 9174</div>
-                    <div style="font-size: 12px; color: var(--text-secondary);">После оплаты отправьте скриншот чека боту.</div>
+                    <div style="font-size: 12px; color: var(--text-secondary);" data-i18n="pay_instruction">После оплаты отправьте скриншот чека боту.</div>
                 </div>
-                <button class="btn" style="padding: 12px; font-size: 14px; margin-top: 16px;" onclick="checkout()">Оформить заказ</button>
+                <button class="btn" style="padding: 12px; font-size: 14px; margin-top: 16px;" onclick="checkout()" data-i18n="btn_checkout">Оформить заказ</button>
             </div>
         </div>
 
-        <!-- Подвкладка 2: Заказы -->
+        <!-- Заказы -->
         <div id="p-sub-orders" class="p-subscreen">
-            <div class="cart-empty">У вас пока нет активных заказов</div>
+            <div class="cart-empty" data-i18n="no_orders">У вас пока нет активных заказов</div>
         </div>
 
-        <!-- Подвкладка 3: Поиск товара по фото -->
+        <!-- Поиск по фото с реальной загрузкой файла -->
         <div id="p-sub-photo" class="p-subscreen">
-            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4;">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4;" data-i18n="photo_desc">
                 Загрузите фото товара — мы найдём его, сообщим цену и доставку.
             </div>
 
             <div class="form-group">
-                <label class="form-label">Фото товара</label>
-                <button class="form-input" style="text-align: center; cursor: pointer; background: var(--card-bg); color: var(--text-main);" onclick="showToast('Загрузка фото...')">
+                <label class="form-label" data-i18n="photo_label">Фото товара</label>
+                <!-- Скрытый инпут для выбора файла с телефона -->
+                <input type="file" id="photo-file-input" accept="image/*" style="display: none;" onchange="handlePhotoUpload(this)">
+                <button type="button" class="form-input" id="upload-btn-text" style="text-align: center; cursor: pointer; background: var(--card-bg); color: var(--text-main);" onclick="document.getElementById('photo-file-input').click()">
                     📄 Загрузить фото
                 </button>
             </div>
 
             <div class="form-group">
-                <label class="form-label">Адрес доставки (необязательно)</label>
-                <input type="text" class="form-input" placeholder="Город, улица, дом, квартира">
+                <label class="form-label" data-i18n="address_label">Адрес доставки (необязательно)</label>
+                <input type="text" id="photo-address" class="form-input" placeholder="Город, улица, дом, квартира">
             </div>
 
             <div class="form-group">
-                <label class="form-label">Телефон</label>
-                <input type="text" class="form-input" placeholder="Введите ваш номер телефона">
+                <label class="form-label" data-i18n="phone_label">Телефон</label>
+                <input type="text" id="photo-phone" class="form-input" placeholder="Введите ваш номер телефона">
             </div>
 
-            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.4;">
+            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.4;" data-i18n="china_delivery_note">
                 Доставка из Китая оплачивается отдельно: по факту взвешивания или при получении. Точную стоимость продавец сообщит после оценки.
             </div>
 
-            <button class="btn" onclick="showToast('Запрос успешно отправлен!')">Отправить запрос</button>
+            <button class="btn" onclick="submitPhotoSearch()" data-i18n="btn_send_request">Отправить запрос</button>
 
-            <div style="margin-top: 20px; font-size: 14px; font-weight: bold; margin-bottom: 8px;">Мои запросы</div>
-            <div style="color: var(--text-secondary); font-size: 13px;">Отправленных запросов пока нет.</div>
+            <div style="margin-top: 20px; font-size: 14px; font-weight: bold; margin-bottom: 8px;" data-i18n="my_requests">Мои запросы</div>
+            <div style="color: var(--text-secondary); font-size: 13px;" data-i18n="no_requests">Отправленных запросов пока нет.</div>
         </div>
     </div>
 
     <!-- 3. ПРОФИЛЬ -->
     <div id="profile-screen" class="screen">
-        <div class="section-title">Профиль</div>
+        <div class="section-title" data-i18n="nav_profile">Профиль</div>
         
         <div class="profile-card">
             <div class="profile-header-flex">
@@ -491,19 +439,19 @@
                     <div style="color: var(--text-secondary); font-size: 12px;" id="user-id-text">Telegram ID: —</div>
                 </div>
             </div>
-            <div style="margin-top: 12px; color: var(--accent-color); font-size: 14px; font-weight: 600;">⭐ Бонусы: 0</div>
+            <div style="margin-top: 12px; color: var(--accent-color); font-size: 14px; font-weight: 600;" id="bonuses-text">⭐ Бонусы: 0</div>
         </div>
 
         <div class="profile-card">
-            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Язык</div>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;" data-i18n="lang_label">Язык</div>
             <div class="lang-switch">
-                <button class="lang-btn active" onclick="setLanguage('ru', this)">Русский</button>
-                <button class="lang-btn" onclick="setLanguage('en', this)">English</button>
+                <button class="lang-btn active" onclick="changeLanguage('ru', this)">Русский</button>
+                <button class="lang-btn" onclick="changeLanguage('en', this)">English</button>
             </div>
         </div>
 
         <div class="profile-card">
-            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Мы в соцсетях</div>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;" data-i18n="social_label">Мы в соцсетях</div>
             <div class="social-btns">
                 <a href="https://instagram.com" target="_blank" class="social-btn">📷 Instagram</a>
                 <a href="https://tiktok.com" target="_blank" class="social-btn">🎵 TikTok</a>
@@ -511,25 +459,25 @@
         </div>
 
         <div class="profile-card">
-            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">Разделы</div>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;" data-i18n="sections_label">Разделы</div>
             <div class="menu-link-row" onclick="showToast('Карго-калькулятор в разработке')">
-                <span>⚖️ Карго-калькулятор</span>
+                <span data-i18n="menu_calc">⚖️ Карго-калькулятор</span>
                 <span style="color: var(--text-secondary);">→</span>
             </div>
             <div class="menu-link-row" onclick="showToast('Rainixshop — лучший streetwear магазин!')">
-                <span>ℹ️ О нас</span>
+                <span data-i18n="menu_about">ℹ️ О нас</span>
                 <span style="color: var(--text-secondary);">→</span>
             </div>
         </div>
 
         <div class="profile-card">
-            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Избранное</div>
-            <div style="font-size: 13px; color: var(--text-main);">Пока пусто. Добавляйте товары сердечком.</div>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;" data-i18n="favorites_label">Избранное</div>
+            <div style="font-size: 13px; color: var(--text-main);" data-i18n="favorites_empty">Пока пусто. Добавляйте товары сердечком.</div>
         </div>
 
         <div class="profile-card" style="cursor: pointer;" onclick="showToast('Напишите нашему менеджеру в боте')">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-weight: 500;">💬 Сообщения / Поддержка</span>
+                <span style="font-weight: 500;" data-i18n="menu_support">💬 Сообщения / Поддержка</span>
                 <span style="color: var(--text-secondary);">→</span>
             </div>
         </div>
@@ -542,14 +490,14 @@
     <!-- НИЖНЕЕ МЕНЮ -->
     <div class="nav-bar">
         <button class="nav-item active" onclick="switchScreen('shop', this)">
-            <span class="icon">🏛️</span> Магазин
+            <span class="icon">🏛️</span> <span data-i18n="nav_shop">Магазин</span>
         </button>
         <button class="nav-item" onclick="switchScreen('cart', this)" id="nav-cart-btn">
-            <span class="icon">🛍️</span> Покупки
+            <span class="icon">🛍️</span> <span data-i18n="nav_purchases">Покупки</span>
             <span class="cart-badge" id="cart-badge">0</span>
         </button>
         <button class="nav-item" onclick="switchScreen('profile', this)">
-            <span class="icon">👤</span> Профиль
+            <span class="icon">👤</span> <span data-i18n="nav_profile">Профиль</span>
         </button>
     </div>
 
@@ -568,23 +516,145 @@
 
         let cart = [];
         let currentCategory = 'all';
+        let currentLang = 'ru';
+        let uploadedPhotoBase64 = null;
+
+        // Словарь мультиязычности (Русский / English)
+        const i18n = {
+            ru: {
+                search_placeholder: "Поиск по названию...",
+                cat_all: "Все",
+                cat_shoes: "Обувь",
+                cat_top: "Верх",
+                cat_bottom: "Низ",
+                cat_accessories: "Аксессуары",
+                in_stock: "В наличии",
+                btn_cart: "В корзину",
+                btn_oneclick: "Купить в 1 клик",
+                nav_shop: "Магазин",
+                nav_purchases: "Покупки",
+                nav_profile: "Профиль",
+                tab_cart: "Корзина",
+                tab_orders: "Заказы",
+                tab_photo: "Поиск по фото",
+                cart_empty: "Корзина пуста",
+                pay_amount: "Сумма к оплате:",
+                pay_card: "Заказ создан. Переведите на карту:",
+                pay_instruction: "После оплаты отправьте скриншот чека боту.",
+                btn_checkout: "Оформить заказ",
+                no_orders: "У вас пока нет активных заказов",
+                photo_desc: "Загрузите фото товара — мы найдём его, сообщим цену и доставку.",
+                photo_label: "Фото товара",
+                photo_loaded: "✅ Фото прикреплено",
+                address_label: "Адрес доставки (необязательно)",
+                phone_label: "Телефон",
+                china_delivery_note: "Доставка из Китая оплачивается отдельно: по факту взвешивания или при получении. Точную стоимость продавец сообщит после оценки.",
+                btn_send_request: "Отправить запрос",
+                my_requests: "Мои запросы",
+                no_requests: "Отправленных запросов пока нет.",
+                lang_label: "Язык",
+                social_label: "Мы в соцсетях",
+                sections_label: "Разделы",
+                menu_calc: "⚖️ Карго-калькулятор",
+                menu_about: "ℹ️ О нас",
+                favorites_label: "Избранное",
+                favorites_empty: "Пока пусто. Добавляйте товары сердечком.",
+                menu_support: "💬 Сообщения / Поддержка",
+                toast_added: "добавлен в корзину",
+                toast_order_sent: "Отправка заказа в бот...",
+                toast_order_success: "Заказ успешно оформлен!",
+                toast_phone_req: "Пожалуйста, укажите номер телефона!",
+                toast_photo_sent: "Отправка запроса с фото..."
+            },
+            en: {
+                search_placeholder: "Search by title...",
+                cat_all: "All",
+                cat_shoes: "Shoes",
+                cat_top: "Top",
+                cat_bottom: "Bottom",
+                cat_accessories: "Accessories",
+                in_stock: "In stock",
+                btn_cart: "Add to cart",
+                btn_oneclick: "Buy 1-click",
+                nav_shop: "Shop",
+                nav_purchases: "Purchases",
+                nav_profile: "Profile",
+                tab_cart: "Cart",
+                tab_orders: "Orders",
+                tab_photo: "Photo Search",
+                cart_empty: "Cart is empty",
+                pay_amount: "Total amount:",
+                pay_card: "Order created. Transfer to card:",
+                pay_instruction: "After payment, send receipt screenshot to the bot.",
+                btn_checkout: "Checkout",
+                no_orders: "You have no active orders yet",
+                photo_desc: "Upload a product photo — we will find it, quote the price and shipping.",
+                photo_label: "Product Photo",
+                photo_loaded: "✅ Photo attached",
+                address_label: "Delivery address (optional)",
+                phone_label: "Phone number",
+                china_delivery_note: "China shipping is paid separately upon weighing or delivery. The exact cost will be provided after evaluation.",
+                btn_send_request: "Send request",
+                my_requests: "My requests",
+                no_requests: "No requests sent yet.",
+                lang_label: "Language",
+                social_label: "Social Media",
+                sections_label: "Sections",
+                menu_calc: "⚖️ Cargo Calculator",
+                menu_about: "ℹ️ About us",
+                favorites_label: "Favorites",
+                favorites_empty: "Empty. Add items with a heart.",
+                menu_support: "💬 Support / Messages",
+                toast_added: "added to cart",
+                toast_order_sent: "Sending order to bot...",
+                toast_order_success: "Order successfully placed!",
+                toast_phone_req: "Please enter your phone number!",
+                toast_photo_sent: "Sending request with photo..."
+            }
+        };
 
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.innerText = message;
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
 
-        function setLanguage(lang, element) {
+        // Переключение языка
+        function changeLanguage(lang, element) {
+            currentLang = lang;
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
+
+            // Применяем переводы к элементам с атрибутом data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) {
+                    el.innerText = i18n[lang][key];
+                }
+            });
+
+            // Обновляем плейсхолдеры
+            document.getElementById('search-input').placeholder = i18n[lang]['search_placeholder'];
+            document.querySelector('#p-sub-photo input[placeholder*="Город"]').placeholder = lang === 'ru' ? "Город, улица, дом, квартира" : "City, street, house, apartment";
+            document.querySelector('#p-sub-photo input[placeholder*="номер"]').placeholder = lang === 'ru' ? "Введите ваш номер телефона" : "Enter your phone number";
+
             showToast(lang === 'ru' ? 'Язык изменен на Русский' : 'Language changed to English');
         }
 
-        /* Переключение вкладок внутри раздела «Покупки» */
+        // Загрузка фото для поиска товара
+        function handlePhotoUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedPhotoBase64 = e.target.result;
+                    document.getElementById('upload-btn-text').innerText = i18n[currentLang]['photo_loaded'];
+                    showToast(currentLang === 'ru' ? 'Фото успешно прикреплено!' : 'Photo attached successfully!');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
         function switchPurchasesTab(tabName, element) {
             document.querySelectorAll('.p-subscreen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
@@ -603,9 +673,7 @@
             applyFilters();
         }
 
-        function filterProducts() {
-            applyFilters();
-        }
+        function filterProducts() { applyFilters(); }
 
         function applyFilters() {
             const searchQuery = document.getElementById('search-input').value.toLowerCase();
@@ -614,22 +682,17 @@
             cards.forEach(card => {
                 const title = card.getAttribute('data-title').toLowerCase();
                 const category = card.getAttribute('data-category');
-
                 const matchesCategory = (currentCategory === 'all' || category === currentCategory);
                 const matchesSearch = title.includes(searchQuery);
 
-                if (matchesCategory && matchesSearch) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
+                card.style.display = (matchesCategory && matchesSearch) ? 'flex' : 'none';
             });
         }
 
         function addToCart(title, price) {
             cart.push({ title, price });
             updateCartUI();
-            showToast(`Товар "${title}" добавлен в корзину`);
+            showToast(`"${title}" ${i18n[currentLang]['toast_added']}`);
         }
 
         function buyOneClick(title, price) {
@@ -654,7 +717,7 @@
             }
             
             if (cart.length === 0) {
-                container.innerHTML = '<div class="cart-empty">Корзина пуста<br><span style="font-size: 12px; margin-top: 4px; display:inline-block; color: var(--text-secondary);">Перейдите в каталог и добавьте вещи</span></div>';
+                container.innerHTML = `<div class="cart-empty">${i18n[currentLang]['cart_empty']}<br><span style="font-size: 12px; margin-top: 4px; display:inline-block; color: var(--text-secondary);">${currentLang === 'ru' ? 'Перейдите в каталог и добавьте вещи' : 'Go to catalog and add items'}</span></div>`;
                 return;
             }
 
@@ -668,7 +731,7 @@
                             <div style="font-size: 14px; font-weight: 500;">${item.title}</div>
                             <div style="color: var(--accent-color); font-size: 13px; margin-top: 4px;">${item.price} сом</div>
                         </div>
-                        <button onclick="removeFromCart(${index})" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;">Удалить</button>
+                        <button onclick="removeFromCart(${index})" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;">${currentLang === 'ru' ? 'Удалить' : 'Delete'}</button>
                     </div>
                 `;
             });
@@ -681,11 +744,59 @@
             updateCartUI();
         }
 
+        // Оформление заказа (отправка в бота)
         function checkout() {
-            showToast('Ваш заказ успешно оформлен!');
-            cart = [];
-            updateCartUI();
-            switchScreen('shop', document.querySelectorAll('.nav-item')[0]);
+            if (cart.length === 0) return;
+            
+            const orderData = {
+                type: "order",
+                items: cart,
+                total: cart.reduce((sum, item) => sum + item.price, 0)
+            };
+
+            showToast(i18n[currentLang]['toast_order_sent']);
+
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
+                tg.sendData(JSON.stringify(orderData));
+            } else {
+                console.log("Заказ отправлен (тест):", orderData);
+                setTimeout(() => {
+                    showToast(i18n[currentLang]['toast_order_success']);
+                    cart = [];
+                    updateCartUI();
+                    switchScreen('shop', document.querySelectorAll('.nav-item')[0]);
+                }, 1000);
+            }
+        }
+
+        // Отправка запроса по фото в бота
+        function submitPhotoSearch() {
+            const address = document.getElementById('photo-address').value;
+            const phone = document.getElementById('photo-phone').value;
+
+            if (!phone) {
+                showToast(i18n[currentLang]['toast_phone_req']);
+                return;
+            }
+
+            const searchRequestData = {
+                type: "photo_search",
+                photo: uploadedPhotoBase64,
+                address: address,
+                phone: phone
+            };
+
+            showToast(i18n[currentLang]['toast_photo_sent']);
+
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
+                tg.sendData(JSON.stringify(searchRequestData));
+            } else {
+                console.log("Запрос по фото отправлен (тест):", searchRequestData);
+                setTimeout(() => {
+                    showToast(currentLang === 'ru' ? 'Запрос успешно отправлен!' : 'Request sent successfully!');
+                    switchScreen('shop', document.querySelectorAll('.nav-item')[0]);
+                }, 1000);
+            }
         }
 
         function switchScreen(screenName, element) {
