@@ -942,13 +942,13 @@
                     ? '📄 Загрузить фото'
                     : '📄 Upload photo';
 
-        } else {
-            showToast(
-                currentLang === 'ru'
-                    ? '❌ Не удалось отправить запрос'
-                    : '❌ Failed to send request'
-            );
-        }
+     } else {
+    showToast(
+        currentLang === 'ru'
+            ? '❌ ' + (result.error || 'Не удалось отправить запрос')
+            : '❌ ' + (result.error || 'Failed to send request')
+    );
+}
 
     } catch (error) {
         console.error(error);
