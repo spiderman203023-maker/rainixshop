@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RAINIXSHOP</title>
-    <!-- Подключаем Telegram Web App -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -15,6 +14,7 @@
             --text-main: #ffffff;
             --text-secondary: #888888;
             --border-color: #2b2b30;
+            --success-color: #22c55e;
         }
 
         body {
@@ -23,13 +23,12 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 16px;
-            padding-bottom: 80px; /* Отступ под нижнее меню */
+            padding-bottom: 90px;
         }
 
-        /* Шапка */
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .logo {
             color: #a855f7;
@@ -45,7 +44,6 @@
             margin-top: 4px;
         }
 
-        /* Поиск */
         .search-box {
             width: 100%;
             padding: 12px 16px;
@@ -54,15 +52,12 @@
             border-radius: 12px;
             color: var(--text-main);
             font-size: 14px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             box-sizing: border-box;
             outline: none;
         }
-        .search-box:focus {
-            border-color: var(--accent-color);
-        }
+        .search-box:focus { border-color: var(--accent-color); }
 
-        /* Категории */
         .categories {
             display: flex;
             gap: 8px;
@@ -80,15 +75,12 @@
             font-size: 13px;
             cursor: pointer;
             white-space: nowrap;
-            transition: 0.2s;
         }
         .cat-btn.active {
             background-color: var(--accent-color);
             border-color: var(--accent-color);
-            box-shadow: 0 0 10px var(--accent-glow);
         }
 
-        /* Каталог товаров */
         .catalog {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -104,7 +96,7 @@
             border: 1px solid var(--border-color);
         }
         .card-img {
-            height: 130px;
+            height: 120px;
             background: #2b2b30;
             border-radius: 10px;
             display: flex;
@@ -117,12 +109,17 @@
         .card-title {
             font-size: 13px;
             font-weight: 500;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .card-price {
             color: #a855f7;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+        .badge-stock {
+            color: var(--success-color);
+            font-size: 11px;
             margin-bottom: 8px;
         }
         .btn {
@@ -135,9 +132,13 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 12px;
+            margin-bottom: 4px;
+        }
+        .btn-secondary {
+            background-color: #2b2b30;
+            color: white;
         }
 
-        /* Нижняя навигация */
         .nav-bar {
             position: fixed;
             bottom: 0;
@@ -160,23 +161,30 @@
             align-items: center;
             cursor: pointer;
             gap: 4px;
+            position: relative;
         }
-        .nav-item.active {
-            color: #a855f7;
-        }
-        .nav-item span.icon {
-            font-size: 18px;
+        .nav-item.active { color: #a855f7; }
+        .nav-item span.icon { font-size: 18px; }
+        
+        .cart-badge {
+            position: absolute;
+            top: -2px;
+            right: 8px;
+            background: #a855f7;
+            color: white;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 10px;
+            display: none;
         }
 
-        /* Экраны (Вкладки) */
         .screen { display: none; }
         .screen.active { display: block; }
 
-        /* Стили для Корзины и Профиля */
         .section-title {
             font-size: 18px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .cart-empty {
             text-align: center;
@@ -187,15 +195,12 @@
 </head>
 <body>
 
-    <!-- Шапка общая -->
     <div class="header">
         <h1 class="logo">RAINIXSHOP</h1>
         <div class="subtitle">streetwear & sneakers</div>
     </div>
 
-    <!-- ВСЕ ВКЛАДКИ -->
-
-    <!-- 1. Магазин (Каталог) -->
+    <!-- 1. МАГАЗИН -->
     <div id="shop-screen" class="screen active">
         <input type="text" class="search-box" placeholder="Поиск по названию...">
         
@@ -207,42 +212,48 @@
             <button class="cat-btn">Аксессуары</button>
         </div>
 
-        <div class="catalog" id="product-list">
-            <!-- Товар 1 -->
+        <div class="catalog">
             <div class="card">
                 <div>
                     <div class="card-img">Фото</div>
                     <div class="card-title">Кроссовки Нумерисы</div>
+                    <div class="badge-stock">В наличии</div>
                 </div>
                 <div>
                     <div class="card-price">4 000 сом</div>
                     <button class="btn" onclick="addToCart('Кроссовки Нумерисы', 4000)">В корзину</button>
+                    <button class="btn btn-secondary" onclick="buyOneClick('Кроссовки Нумерисы', 4000)">Купить в 1 клик</button>
                 </div>
             </div>
-            <!-- Товар 2 -->
+            
             <div class="card">
                 <div>
                     <div class="card-img">Фото</div>
                     <div class="card-title">Худи Oversize Black</div>
+                    <div class="badge-stock">В наличии</div>
                 </div>
                 <div>
                     <div class="card-price">3 500 сом</div>
                     <button class="btn" onclick="addToCart('Худи Oversize Black', 3500)">В корзину</button>
+                    <button class="btn btn-secondary" onclick="buyOneClick('Худи Oversize Black', 3500)">Купить в 1 клик</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 2. Покупки / Корзина -->
+    <!-- 2. ПОКУПКИ / КОРЗИНА -->
     <div id="cart-screen" class="screen">
         <div class="section-title">Корзина</div>
         <div id="cart-items">
             <div class="cart-empty">Ваша корзина пока пуста</div>
         </div>
-        <div id="cart-total" style="margin-top: 20px; font-weight: bold; font-size: 16px;"></div>
+        <div id="cart-total-container" style="margin-top: 16px; display: none;">
+            <div style="font-weight: bold; font-size: 16px; margin-bottom: 12px;" id="cart-total-text">Итого: 0 сом</div>
+            <button class="btn" style="padding: 12px; font-size: 14px;" onclick="checkout()">Оформить заказ</button>
+        </div>
     </div>
 
-    <!-- 3. Профиль -->
+    <!-- 3. ПРОФИЛЬ -->
     <div id="profile-screen" class="screen">
         <div class="section-title">Профиль</div>
         <div style="background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border-color);">
@@ -252,13 +263,14 @@
         </div>
     </div>
 
-    <!-- Нижняя панель меню -->
+    <!-- НИЖНЕЕ МЕНЮ -->
     <div class="nav-bar">
         <button class="nav-item active" onclick="switchScreen('shop', this)">
             <span class="icon">🏛️</span> Магазин
         </button>
         <button class="nav-item" onclick="switchScreen('cart', this)">
             <span class="icon">🛍️</span> Покупки
+            <span class="cart-badge" id="cart-badge">0</span>
         </button>
         <button class="nav-item" onclick="switchScreen('profile', this)">
             <span class="icon">👤</span> Профиль
@@ -269,29 +281,40 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Заполняем данные профиля из Telegram, если они есть
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             const user = tg.initDataUnsafe.user;
             document.getElementById('user-name').innerText = user.first_name || 'Пользователь';
             document.getElementById('user-username').innerText = user.username ? '@' + user.username : 'ID: ' + user.id;
         }
 
-        // Корзина
         let cart = [];
 
         function addToCart(title, price) {
             cart.push({ title, price });
-            alert(`Товар "${title}" добавлен в корзину!`);
             updateCartUI();
+        }
+
+        function buyOneClick(title, price) {
+            alert(`Заказ оформлен в 1 клик! Товар: ${title} (${price} сом). С вами свяжутся.`);
         }
 
         function updateCartUI() {
             const container = document.getElementById('cart-items');
-            const totalContainer = document.getElementById('cart-total');
+            const totalContainer = document.getElementById('cart-total-container');
+            const totalText = document.getElementById('cart-total-text');
+            const badge = document.getElementById('cart-badge');
+
+            if (cart.length > 0) {
+                badge.style.display = 'block';
+                badge.innerText = cart.length;
+                totalContainer.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+                totalContainer.style.display = 'none';
+            }
             
             if (cart.length === 0) {
                 container.innerHTML = '<div class="cart-empty">Ваша корзина пока пуста</div>';
-                totalContainer.innerHTML = '';
                 return;
             }
 
@@ -300,7 +323,7 @@
             cart.forEach((item, index) => {
                 total += item.price;
                 html += `
-                    <div style="background: var(--card-bg); padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="background: var(--card-bg); padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color);">
                         <div>
                             <div style="font-size: 14px; font-weight: 500;">${item.title}</div>
                             <div style="color: #a855f7; font-size: 13px; margin-top: 4px;">${item.price} сом</div>
@@ -310,7 +333,7 @@
                 `;
             });
             container.innerHTML = html;
-            totalContainer.innerHTML = `Итого: ${total} сом`;
+            totalText.innerText = `Итого: ${total} сом`;
         }
 
         function removeFromCart(index) {
@@ -318,18 +341,20 @@
             updateCartUI();
         }
 
-        // Переключение экранов
+        function checkout() {
+            alert('Заказ успешно оформлен! Ожидайте подтверждения.');
+            cart = [];
+            updateCartUI();
+            switchScreen('shop', document.querySelector('.nav-item'));
+        }
+
         function switchScreen(screenName, element) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
-            if (screenName === 'shop') {
-                document.getElementById('shop-screen').classList.add('active');
-            } else if (screenName === 'cart') {
-                document.getElementById('cart-screen').classList.add('active');
-            } else if (screenName === 'profile') {
-                document.getElementById('profile-screen').classList.add('active');
-            }
+            if (screenName === 'shop') document.getElementById('shop-screen').classList.add('active');
+            if (screenName === 'cart') document.getElementById('cart-screen').classList.add('active');
+            if (screenName === 'profile') document.getElementById('profile-screen').classList.add('active');
 
             element.classList.add('active');
         }
