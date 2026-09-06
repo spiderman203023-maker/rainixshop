@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070b12">
+<title>RAINIXSHOP — Админ</title>
+<style>
+:root{--bg:#070b12;--card:#101824;--line:#243044;--text:#fff;--muted:#8f99aa;--pink:#ff5f92;--danger:#ff5b6e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}.app{max-width:620px;margin:auto;padding:18px 14px 50px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.logo{font-size:23px;font-weight:900;letter-spacing:2px}.logo span{color:var(--pink)}.card{background:linear-gradient(145deg,#111a27,#0d141f);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:12px}.title{font-size:19px;font-weight:900}.muted{color:var(--muted);font-size:12px}.field{width:100%;height:46px;margin-top:6px;border-radius:11px;border:1px solid var(--line);background:#0a111b;color:#fff;padding:0 12px;outline:none}.field:focus{border-color:var(--pink)}.label{display:block;color:var(--muted);font-size:12px;margin-top:12px}.row{display:flex;gap:8px}.row>*{flex:1}.primary,.danger,.secondary{width:100%;height:46px;border-radius:11px;border:0;font-weight:900;cursor:pointer;margin-top:12px}.primary{background:var(--pink);color:#170a10}.secondary{background:#202b3d;color:#fff;border:1px solid #304058}.danger{background:rgba(255,91,110,.13);border:1px solid rgba(255,91,110,.45);color:#ff8997}.upload{border:1px dashed #3b4960;border-radius:12px;min-height:90px;margin-top:7px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);cursor:pointer;padding:10px}.previews{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}.preview{height:82px;width:100%;object-fit:cover;border-radius:9px;border:1px solid var(--line)}.size-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}.size-chip{background:#0b121c;border:1px solid var(--line);color:#fff;border-radius:9px;padding:8px 10px}.products{display:grid;gap:9px}.product{display:flex;gap:10px;align-items:center}.thumb{width:65px;height:65px;object-fit:cover;border-radius:11px;background:#182131}.pinfo{flex:1;min-width:0}.pname{font-weight:800;font-size:13px}.actions{display:flex;gap:6px;margin-top:7px}.small{height:34px;padding:0 11px;border-radius:9px;border:1px solid var(--line);background:#162131;color:#fff;font-weight:750}.small.del{color:#ff8795}.status{margin-top:10px;font-size:12px}.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><div class="logo">RAINIX <span>SHOP</span></div><div class="muted">Админ-панель</div></div>
+
+<div id="loginCard" class="card">
+<div class="title">🔐 Вход</div>
+<div class="muted" style="margin-top:5px">Пароль нужен только для доступа к управлению товарами.</div>
+<label class="label">Пароль</label>
+<input id="password" class="field" type="password" placeholder="Введите пароль">
+<button class="primary" onclick="login()">Войти</button>
+<div id="loginStatus" class="status"></div>
+</div>
+
+<div id="panel" class="hidden">
+<div class="card">
+<div class="title">➕ Добавить товар</div>
+<label class="label">Название</label><input id="title" class="field" placeholder="Например, New Balance 530">
+<div class="row">
+<div><label class="label">Цена</label><input id="price" class="field" type="number" placeholder="890000"></div>
+<div><label class="label">Старая цена</label><input id="oldPrice" class="field" type="number" placeholder="950000"></div>
+</div>
+<div class="row">
+<div><label class="label">Категория</label><select id="category" class="field"><option value="shoes">Обувь</option><option value="top">Верх</option><option value="bottom">Низ</option><option value="accessories">Аксессуары</option></select></div>
+<div><label class="label">Количество</label><input id="stock" class="field" type="number" placeholder="1" value="1"></div>
+</div>
+<label class="label">Размеры — через запятую</label>
+<input id="sizes" class="field" placeholder="40, 41, 42, 43">
+<label class="label">Описание</label>
+<textarea id="description" class="field" style="height:90px;padding-top:10px" placeholder="Описание товара"></textarea>
+<label class="label">Фотографии</label>
+<input id="images" class="hidden" type="file" accept="image/*" multiple onchange="previewImages(this)">
+<div class="upload" onclick="document.getElementById('images').click()">📸 Нажмите, чтобы выбрать фотографии</div>
+<div id="previews" class="previews"></div>
+<button class="primary" onclick="addProduct()">Добавить товар</button>
+<div id="addStatus" class="status"></div>
+</div>
+
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center"><div class="title">📦 Товары</div><button class="small" onclick="loadProducts()">Обновить</button></div>
+<div id="products" class="products" style="margin-top:12px"></div>
+</div>
+</div>
+</div>
+
+<script>
+const API="https://rainixshop-server.onrender.com";
+let key=localStorage.getItem("rainix_admin_key")||"";
+let imageData=[];
+
+function status(id,text,error=false){const e=document.getElementById(id);e.textContent=text;e.style.color=error?"#ff8997":"#91d7c9"}
+
+function login(){
+    key=document.getElementById("password").value.trim();
+    if(!key)return status("loginStatus","Введите пароль",true);
+    loadProducts().then(ok=>{
+        if(ok){localStorage.setItem("rainix_admin_key",key);document.getElementById("loginCard").classList.add("hidden");document.getElementById("panel").classList.remove("hidden")}
+    });
+}
+
+async function api(path,options={}){
+    options.headers={...(options.headers||{}),"Content-Type":"application/json","X-Admin-Key":key};
+    const r=await fetch(API+path,options);
+    const j=await r.json().catch(()=>({}));
+    if(r.status===401) throw new Error("Неверный пароль");
+    if(!r.ok||j.success===false) throw new Error(j.error||"Ошибка");
+    return j;
+}
+
+function previewImages(input){
+    imageData=[];
+    const box=document.getElementById("previews");
+    box.innerHTML="";
+    [...(input.files||[])].forEach(file=>{
+        if(file.size>5*1024*1024){status("addStatus","Фото больше 5 МБ: "+file.name,true);return}
+        const reader=new FileReader();
+        reader.onload=e=>{
+            imageData.push(e.target.result);
+            const img=document.createElement("img");img.className="preview";img.src=e.target.result;box.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+async function addProduct(){
+    try{
+        if(!imageData.length)throw new Error("Добавьте хотя бы одну фотографию");
+        const sizes=document.getElementById("sizes").value.split(",").map(x=>x.trim()).filter(Boolean);
+        const data={
+            title:document.getElementById("title").value.trim(),
+            price:Number(document.getElementById("price").value),
+            oldPrice:Number(document.getElementById("oldPrice").value||0),
+            category:document.getElementById("category").value,
+            stock:Number(document.getElementById("stock").value||0),
+            sizes,description:document.getElementById("description").value.trim(),images:imageData
+        };
+        await api("/api/admin/products",{method:"POST",body:JSON.stringify(data)});
+        status("addStatus","✅ Товар добавлен");
+        ["title","price","oldPrice","sizes","description"].forEach(id=>document.getElementById(id).value="");
+        document.getElementById("stock").value="1";
+        document.getElementById("images").value="";
+        document.getElementById("previews").innerHTML="";
+        imageData=[];
+        loadProducts();
+    }catch(e){status("addStatus","❌ "+e.message,true)}
+}
+
+async function loadProducts(){
+    try{
+        const r=await fetch(API+"/api/products");
+        const j=await r.json();
+        if(!r.ok)throw new Error();
+        const list=Array.isArray(j.products)?j.products:[];
+        document.getElementById("products").innerHTML=list.length?list.map(p=>`
+            <div class="card" style="margin:0">
+                <div class="product">
+                    <img class="thumb" src="${p.images?.[0]||""}">
+                    <div class="pinfo"><div class="pname">${escapeHtml(p.title)}</div><div class="muted">${money(p.price)} · ${escapeHtml(p.cat)}</div><div class="muted">Размеры: ${(p.sizes||[]).join(", ")||"не указаны"} · Остаток: ${p.stock}</div></div>
+                </div>
+                <div class="actions"><button class="small del" onclick="deleteProduct(${p.id})">🗑 Удалить</button></div>
+            </div>`).join(""):'<div class="muted">Товаров пока нет.</div>';
+        return true;
+    }catch(e){
+        if(key){status("loginStatus","❌ Неверный пароль или сервер недоступен",true)}
+        return false;
+    }
+}
+async function deleteProduct(id){
+    if(!confirm("Удалить этот товар?"))return;
+    try{await api("/api/admin/products/"+id,{method:"DELETE"});loadProducts()}catch(e){alert(e.message)}
+}
+function money(n){return Number(n||0).toLocaleString("ru-RU")+" сум"}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]))}
+
+if(key){loadProducts().then(ok=>{if(ok){document.getElementById("loginCard").classList.add("hidden");document.getElementById("panel").classList.remove("hidden")}})}
+</script>
+</body>
+</html>
