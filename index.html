@@ -98,6 +98,7 @@
             font-size: 13px;
             cursor: pointer;
             white-space: nowrap;
+            transition: 0.2s;
         }
         .cat-btn.active {
             background-color: var(--accent-color);
@@ -226,7 +227,7 @@
 <body>
 
     <!-- Всплывающее зеленое уведомление сверху -->
-    <div id="toast">Ваш заказ успешно оформлен!</div>
+    <div id="toast">Успешно!</div>
 
     <div class="header">
         <h1 class="logo">RAINIXSHOP</h1>
@@ -235,18 +236,19 @@
 
     <!-- 1. МАГАЗИН -->
     <div id="shop-screen" class="screen active">
-        <input type="text" class="search-box" placeholder="Поиск по названию...">
+        <input type="text" id="search-input" class="search-box" placeholder="Поиск по названию..." oninput="filterProducts()">
         
         <div class="categories">
-            <button class="cat-btn active">Все</button>
-            <button class="cat-btn">Обувь</button>
-            <button class="cat-btn">Верх</button>
-            <button class="cat-btn">Низ</button>
-            <button class="cat-btn">Аксессуары</button>
+            <button class="cat-btn active" onclick="filterCategory('all', this)">Все</button>
+            <button class="cat-btn" onclick="filterCategory('shoes', this)">Обувь</button>
+            <button class="cat-btn" onclick="filterCategory('top', this)">Верх</button>
+            <button class="cat-btn" onclick="filterCategory('bottom', this)">Низ</button>
+            <button class="cat-btn" onclick="filterCategory('accessories', this)">Аксессуары</button>
         </div>
 
-        <div class="catalog">
-            <div class="card">
+        <div class="catalog" id="product-catalog">
+            <!-- Карточки товаров с категориями (атрибут data-category) -->
+            <div class="card" data-category="shoes" data-title="Кроссовки Нумерисы">
                 <div>
                     <div class="card-img">Фото</div>
                     <div class="card-title">Кроссовки Нумерисы</div>
@@ -259,7 +261,7 @@
                 </div>
             </div>
             
-            <div class="card">
+            <div class="card" data-category="top" data-title="Худи Oversize Black">
                 <div>
                     <div class="card-img">Фото</div>
                     <div class="card-title">Худи Oversize Black</div>
@@ -328,6 +330,7 @@
         }
 
         let cart = [];
+        let currentCategory = 'all';
 
         function showToast(message) {
             const toast = document.getElementById('toast');
@@ -335,7 +338,39 @@
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 3000); // Уведомление пропадет через 3 секунды
+            }, 3000);
+        }
+
+        // Фильтрация по категориям
+        function filterCategory(category, element) {
+            currentCategory = category;
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            applyFilters();
+        }
+
+        // Поиск по названию
+        function filterProducts() {
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                const category = card.getAttribute('data-category');
+
+                const matchesCategory = (currentCategory === 'all' || category === currentCategory);
+                const matchesSearch = title.includes(searchQuery);
+
+                if (matchesCategory && matchesSearch) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
 
         function addToCart(title, price) {
@@ -412,5 +447,4 @@
         }
     </script>
 </body>
-</html>
 </html>
