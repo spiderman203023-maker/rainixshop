@@ -191,6 +191,13 @@
             color: var(--text-secondary);
             margin-top: 40px;
         }
+        .payment-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: 16px;
+        }
     </style>
 </head>
 <body>
@@ -200,7 +207,6 @@
         <div class="subtitle">streetwear & sneakers</div>
     </div>
 
-    <!-- 1. МАГАЗИН -->
     <div id="shop-screen" class="screen active">
         <input type="text" class="search-box" placeholder="Поиск по названию...">
         
@@ -241,19 +247,24 @@
         </div>
     </div>
 
-    <!-- 2. ПОКУПКИ / КОРЗИНА -->
     <div id="cart-screen" class="screen">
-        <div class="section-title">Корзина</div>
+        <div class="section-title">Покупки</div>
         <div id="cart-items">
             <div class="cart-empty">Ваша корзина пока пуста</div>
         </div>
-        <div id="cart-total-container" style="margin-top: 16px; display: none;">
-            <div style="font-weight: bold; font-size: 16px; margin-bottom: 12px;" id="cart-total-text">Итого: 0 сом</div>
-            <button class="btn" style="padding: 12px; font-size: 14px;" onclick="checkout()">Оформить заказ</button>
+        
+        <div id="checkout-section" style="display: none;">
+            <div class="payment-box">
+                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Сумма к оплате:</div>
+                <div style="color: #a855f7; font-size: 20px; font-weight: bold; margin-bottom: 12px;" id="total-price-text">0 сом</div>
+                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Заказ создан. Переведите на карту:</div>
+                <div style="color: #a855f7; font-size: 16px; font-weight: bold; letter-spacing: 1px; margin-bottom: 12px;">4714 7000 3652 9174</div>
+                <div style="font-size: 12px; color: var(--text-secondary);">После оплаты отправьте скриншот чека боту.</div>
+            </div>
+            <button class="btn" style="padding: 12px; font-size: 14px; margin-top: 16px;" onclick="checkout()">Оформить заказ</button>
         </div>
     </div>
 
-    <!-- 3. ПРОФИЛЬ -->
     <div id="profile-screen" class="screen">
         <div class="section-title">Профиль</div>
         <div style="background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border-color);">
@@ -263,12 +274,11 @@
         </div>
     </div>
 
-    <!-- НИЖНЕЕ МЕНЮ -->
     <div class="nav-bar">
         <button class="nav-item active" onclick="switchScreen('shop', this)">
             <span class="icon">🏛️</span> Магазин
         </button>
-        <button class="nav-item" onclick="switchScreen('cart', this)">
+        <button class="nav-item" onclick="switchScreen('cart', this)" id="nav-cart-btn">
             <span class="icon">🛍️</span> Покупки
             <span class="cart-badge" id="cart-badge">0</span>
         </button>
@@ -295,22 +305,24 @@
         }
 
         function buyOneClick(title, price) {
-            alert(`Заказ оформлен в 1 клик! Товар: ${title} (${price} сом). С вами свяжутся.`);
+            cart = [{ title, price }]; // Очищаем корзину и кладем туда только этот товар
+            updateCartUI();
+            switchScreen('cart', document.querySelectorAll('.nav-item')[1]); // Сразу переходим во вкладку «Покупки»
         }
 
         function updateCartUI() {
             const container = document.getElementById('cart-items');
-            const totalContainer = document.getElementById('cart-total-container');
-            const totalText = document.getElementById('cart-total-text');
+            const checkoutSection = document.getElementById('checkout-section');
+            const totalPriceText = document.getElementById('total-price-text');
             const badge = document.getElementById('cart-badge');
 
             if (cart.length > 0) {
                 badge.style.display = 'block';
                 badge.innerText = cart.length;
-                totalContainer.style.display = 'block';
+                checkoutSection.style.display = 'block';
             } else {
                 badge.style.display = 'none';
-                totalContainer.style.display = 'none';
+                checkoutSection.style.display = 'none';
             }
             
             if (cart.length === 0) {
@@ -333,7 +345,7 @@
                 `;
             });
             container.innerHTML = html;
-            totalText.innerText = `Итого: ${total} сом`;
+            totalPriceText.innerText = `${total} сом`;
         }
 
         function removeFromCart(index) {
@@ -342,10 +354,10 @@
         }
 
         function checkout() {
-            alert('Заказ успешно оформлен! Ожидайте подтверждения.');
+            alert('Заказ успешно создан! Пожалуйста, переведите указанную сумму на карту и отправьте скриншот чека в чат с ботом.');
             cart = [];
             updateCartUI();
-            switchScreen('shop', document.querySelector('.nav-item'));
+            switchScreen('shop', document.querySelectorAll('.nav-item')[0]);
         }
 
         function switchScreen(screenName, element) {
