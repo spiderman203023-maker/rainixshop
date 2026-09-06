@@ -8,13 +8,13 @@
     <style>
         :root {
             --bg-color: #0c0c0e;          /* Глубокий черный фон */
-            --card-bg: #161619;           /* Чуть светлее черный для карточек */
-            --accent-color: #d4b59d;      /* Стильный мягкий бежевый (акцент) */
-            --accent-dark: #b8977e;       /* Темный беж для наведения */
+            --card-bg: #161619;           /* Карточки */
+            --accent-color: #d4b59d;      /* Стильный мягкий бежевый */
+            --accent-dark: #b8977e;       
             --accent-glow: rgba(212, 181, 157, 0.25);
-            --text-main: #f5f2ed;         /* Теплый беловатый текст */
-            --text-secondary: #99938d;    /* Серый с бежевым отливом для подписей */
-            --border-color: #262529;      /* Темные аккуратные границы */
+            --text-main: #f5f2ed;         /* Теплый текст */
+            --text-secondary: #99938d;    /* Серый с бежевым отливом */
+            --border-color: #262529;      /* Границы */
             --success-color: #22c55e;
         }
 
@@ -162,12 +162,92 @@
             margin-bottom: 4px;
             transition: 0.2s;
         }
-        .btn:active {
-            background-color: var(--accent-dark);
-        }
         .btn-secondary {
             background-color: #222126;
             color: var(--text-main);
+        }
+
+        /* Элементы профиля */
+        .profile-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+        .profile-header-flex {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .profile-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--accent-color);
+            color: #0c0c0e;
+            font-weight: bold;
+            font-size: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .social-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .social-btn {
+            flex: 1;
+            background: #1f1e24;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .menu-link-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .menu-link-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .menu-link-row:first-child {
+            padding-top: 0;
+        }
+        .lang-switch {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .lang-btn {
+            background: #1f1e24;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .lang-btn.active {
+            background: var(--accent-color);
+            color: #0c0c0e;
+            border-color: var(--accent-color);
+            font-weight: 600;
         }
 
         .nav-bar {
@@ -305,10 +385,68 @@
     <!-- 3. ПРОФИЛЬ -->
     <div id="profile-screen" class="screen">
         <div class="section-title">Профиль</div>
-        <div style="background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border-color);">
-            <div id="user-name" style="font-weight: bold; font-size: 16px; margin-bottom: 4px;">Пользователь</div>
-            <div id="user-username" style="color: var(--text-secondary); font-size: 13px;">@username</div>
-            <div style="margin-top: 12px; color: var(--accent-color); font-size: 14px;">⭐ Бонусы: 0</div>
+        
+        <!-- Карточка пользователя -->
+        <div class="profile-card">
+            <div class="profile-header-flex">
+                <div class="profile-avatar" id="user-avatar">U</div>
+                <div>
+                    <div id="user-name" style="font-weight: bold; font-size: 16px;">Пользователь</div>
+                    <div id="user-username" style="color: var(--text-secondary); font-size: 13px; margin-top: 2px;">@username</div>
+                    <div style="color: var(--text-secondary); font-size: 12px;" id="user-id-text">Telegram ID: —</div>
+                </div>
+            </div>
+            <div style="margin-top: 12px; color: var(--accent-color); font-size: 14px; font-weight: 600;">⭐ Бонусы: 0</div>
+        </div>
+
+        <!-- Язык -->
+        <div class="profile-card">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Язык</div>
+            <div class="lang-switch">
+                <button class="lang-btn active" onclick="setLanguage('ru', this)">Русский</button>
+                <button class="lang-btn" onclick="setLanguage('en', this)">English</button>
+            </div>
+        </div>
+
+        <!-- Соцсети -->
+        <div class="profile-card">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Мы в соцсетях</div>
+            <div class="social-btns">
+                <a href="https://instagram.com" target="_blank" class="social-btn">📷 Instagram</a>
+                <a href="https://tiktok.com" target="_blank" class="social-btn">🎵 TikTok</a>
+            </div>
+        </div>
+
+        <!-- Разделы -->
+        <div class="profile-card">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">Разделы</div>
+            <div class="menu-link-row" onclick="showToast('Карто-калькулятор в разработке')">
+                <span>⚖️ Карго-калькулятор</span>
+                <span style="color: var(--text-secondary);">→</span>
+            </div>
+            <div class="menu-link-row" onclick="showToast('Rainixshop — лучший streetwear магазин!')">
+                <span>ℹ️ О нас</span>
+                <span style="color: var(--text-secondary);">→</span>
+            </div>
+        </div>
+
+        <!-- Избранное -->
+        <div class="profile-card">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Избранное</div>
+            <div style="font-size: 13px; color: var(--text-main);">Пока пусто. Добавляйте товары сердечком.</div>
+        </div>
+
+        <!-- Поддержка -->
+        <div class="profile-card" style="cursor: pointer;" onclick="showToast('Напишите нашему менеджеру в боте')">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 500;">💬 Сообщения / Поддержка</span>
+                <span style="color: var(--text-secondary);">→</span>
+            </div>
+        </div>
+
+        <!-- Копирайт -->
+        <div style="text-align: center; color: var(--text-secondary); font-size: 12px; margin-top: 20px; margin-bottom: 10px;">
+            Разработано: <span style="color: var(--accent-color);">@rainixshop</span>
         </div>
     </div>
 
@@ -332,8 +470,11 @@
 
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             const user = tg.initDataUnsafe.user;
-            document.getElementById('user-name').innerText = user.first_name || 'Пользователь';
+            const firstName = user.first_name || 'Пользователь';
+            document.getElementById('user-name').innerText = firstName;
+            document.getElementById('user-avatar').innerText = firstName.charAt(0).toUpperCase();
             document.getElementById('user-username').innerText = user.username ? '@' + user.username : 'ID: ' + user.id;
+            document.getElementById('user-id-text').innerText = 'Telegram ID: ' + user.id;
         }
 
         let cart = [];
@@ -344,8 +485,14 @@
             toast.innerText = message;
             toast.classList.add('show');
             setTimeout(() => {
-                toast.classList.remove('side') || toast.classList.remove('show');
+                toast.classList.remove('show');
             }, 3000);
+        }
+
+        function setLanguage(lang, element) {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            showToast(lang === 'ru' ? 'Язык изменен на Русский' : 'Language changed to English');
         }
 
         function filterCategory(category, element) {
@@ -441,7 +588,7 @@
         }
 
         function switchScreen(screenName, element) {
-            document.querySelectorAll('.screen').screenClassRemove = document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
             if (screenName === 'shop') document.getElementById('shop-screen').classList.add('active');
