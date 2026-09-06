@@ -769,46 +769,37 @@
             }
         }
 
-        // Отправка запроса по фото в бота
-        function submitPhotoSearch() {
-            const address = document.getElementById('photo-address').value;
-            const phone = document.getElementById('photo-phone').value;
+              // Отправка запроса по фото в бота
+function submitPhotoSearch() {
+    const address = document.getElementById('photo-address').value;
+    const phone = document.getElementById('photo-phone').value;
 
-            if (!phone) {
-                showToast(i18n[currentLang]['toast_phone_req']);
-                return;
-            }
+    if (!phone) {
+        showToast(i18n[currentLang]['toast_phone_req']);
+        return;
+    }
 
-            const searchRequestData = {
-                type: "photo_search",
-                photo: uploadedPhotoBase64,
-                address: address,
-                phone: phone
-            };
+    const searchRequestData = {
+        type: "photo_search",
+        photo: uploadedPhotoBase64,
+        address: address,
+        phone: phone
+    };
 
-            showToast(i18n[currentLang]['toast_photo_sent']);
+    showToast(i18n[currentLang]['toast_photo_sent']);
 
-            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
-                tg.sendData(JSON.stringify(searchRequestData));
-            } else {
-                console.log("Запрос по фото отправлен (тест):", searchRequestData);
-                setTimeout(() => {
-                    showToast(currentLang === 'ru' ? 'Запрос успешно отправлен!' : 'Request sent successfully!');
-                    switchScreen('shop', document.querySelectorAll('.nav-item')[0]);
-                }, 1000);
-            }
-        }
-
-        function switchScreen(screenName, element) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-            if (screenName === 'shop') document.getElementById('shop-screen').classList.add('active');
-            if (screenName === 'cart') document.getElementById('cart-screen').classList.add('active');
-            if (screenName === 'profile') document.getElementById('profile-screen').classList.add('active');
-
-            element.classList.add('active');
-        }
+    // Проверяем объект Telegram и сразу отправляем данные
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.sendData(JSON.stringify(searchRequestData));
+    } else {
+        // Это сработает только если открыть сайт просто в обычном браузере на компе
+        console.log("Запрос по фото отправлен (тест):", searchRequestData);
+        setTimeout(() => {
+            showToast(currentLang === 'ru' ? 'Запрос успешно отправлен!' : 'Request sent successfully!');
+            switchScreen('shop', document.querySelectorAll('.nav-item')[0]);
+        }, 1000);
+    }
+}
     </script>
 </body>
 </html>
