@@ -715,6 +715,10 @@ img {
     font-size:21px;
     font-weight:900
 }
+.detail-meta{margin:8px 0 12px;line-height:1.55;font-size:13px;color:var(--muted)}
+.detail-meta b{color:#fff;font-weight:800}
+.detail-meta{color:var(--muted)}
+
 .detail-price {
     font-size:20px;
     color:var(--pink);
@@ -981,6 +985,8 @@ img {
 <div id="detailPrice" class="detail-price">
 </div>
 <div class="muted" style="line-height:1.45;margin-bottom:12px">Стильная вещь для повседневного образа. Подойдёт для современного streetwear гардероба.</div>
+<div id="detailMaterial" class="detail-meta"></div>
+<div id="detailColorsWrap" style="display:none;margin-bottom:12px"><div class="label" data-i18n="color">Цвет</div><div id="detailColors" class="sizes"></div></div>
 <div class="label" data-i18n="size">Размер</div>
 <div id="detailSizes" class="sizes">
 </div>
@@ -1096,7 +1102,7 @@ const I18N = {
     addPhoto:"📎 Добавить фото", sendRequest:"Отправить запрос", emptyCart:"🛍\n\nКорзина пуста",
     emptyOrders:"У вас пока нет заказов", productsEmpty:"Товаров пока нет",
     adminHint:"Добавьте первый товар через админ-панель",
-    size:"Размер", product:"Товар", delivery:"Доставка", paidSeparately:"Оплачивается отдельно",
+    size:"Размер", color:"Цвет", material:"Материал", product:"Товар", delivery:"Доставка", paidSeparately:"Оплачивается отдельно",
     total:"Итого", items:"Товары", close:"Закрыть", description:"Описание",
     deliveryPayment:"Доставка и оплата", returns:"Возврат", newOrder:"Оформление заказа"
   },
@@ -1116,7 +1122,7 @@ const I18N = {
     addPhoto:"📎 Rasm qo‘shish", sendRequest:"So‘rov yuborish", emptyCart:"🛍\n\nSavat bo‘sh",
     emptyOrders:"Sizda hali buyurtmalar yo‘q", productsEmpty:"Hozircha mahsulotlar yo‘q",
     adminHint:"Birinchi mahsulotni admin paneli orqali qo‘shing",
-    size:"O‘lcham", product:"Mahsulot", delivery:"Yetkazib berish", paidSeparately:"Alohida to‘lanadi",
+    size:"O‘lcham", color:"Rang", material:"Material", product:"Mahsulot", delivery:"Yetkazib berish", paidSeparately:"Alohida to‘lanadi",
     total:"Jami", items:"Mahsulotlar", close:"Yopish", description:"Tavsif",
     deliveryPayment:"Yetkazib berish va to‘lov", returns:"Qaytarish", newOrder:"Buyurtmani rasmiylashtirish"
   },
@@ -1136,7 +1142,7 @@ const I18N = {
     addPhoto:"📎 Add photo", sendRequest:"Send request", emptyCart:"🛍\n\nYour cart is empty",
     emptyOrders:"You have no orders yet", productsEmpty:"No products yet",
     adminHint:"Add your first product through the admin panel",
-    size:"Size", product:"Product", delivery:"Delivery", paidSeparately:"Paid separately",
+    size:"Size", color:"Color", material:"Material", product:"Product", delivery:"Delivery", paidSeparately:"Paid separately",
     total:"Total", items:"Items", close:"Close", description:"Description",
     deliveryPayment:"Delivery & payment", returns:"Returns", newOrder:"Checkout"
   }
@@ -1204,7 +1210,7 @@ async function loadProducts() {
 
 let cart=JSON.parse(localStorage.getItem("rainix_cart")||"[]");
 let orders=JSON.parse(localStorage.getItem("rainix_orders")||"[]");
-let category="all",sortMode="new",currentProduct=null,selectedSize="",receipt=null,photoBase64=null;
+let category="all",sortMode="new",currentProduct=null,selectedSize="",selectedColor="",receipt=null,photoBase64=null;
 let priceMin=null,priceMax=null;
 
 function togglePriceFilters(){
@@ -1280,7 +1286,7 @@ function renderProducts(){
     }).join("") : '<div class="empty" style="grid-column:1/-1">Товаров пока нет<br><span class="muted">Добавьте первый товар через админ-панель</span></div>';
 }
 
-function addToCart(id, size = "") {
+function addToCart(id, size = "", color = "") {
     const p = products.find(x => String(x.id) === String(id));
     if (!p) return;
 
@@ -1289,7 +1295,8 @@ function addToCart(id, size = "") {
         title: p.title,
         price: Number(p.price || 0),
         img: p.images?.[0] || p.img || "",
-        size: size || ""
+        size: size || "",
+        color: color || ""
     });
 
     saveCart();
@@ -1304,7 +1311,7 @@ function renderCart(){
  const total=cart.reduce((s,p)=>s+p.price,0);
  box.innerHTML=cart.map((p,i)=>`
  <div class="cart-item"><img class="cart-img" src="${p.img}" alt=""><div class="cart-info">
- <div class="cart-name">${escapeHtml(p.title)}</div><div class="muted">${p.size?"Размер: "+escapeHtml(p.size):"Размер не выбран"}</div>
+ <div class="cart-name">${escapeHtml(p.title)}</div><div class="muted">${p.size?"Размер: "+escapeHtml(p.size):"Размер не выбран"}${p.color?" · Цвет: "+escapeHtml(p.color):""}</div>
  <div class="cart-price">${money(p.price)}</div><button class="cart-remove" onclick="removeCart(${i})">${t("remove")}</button>
  </div></div>`).join("")+
  `<div class="summary"><div class="row"><span>Товары (${cart.length})</span><span>${money(total)}</span></div><div class="row"><span>${t("delivery")}</span><span>${t("paidSeparately")}</span></div><div class="row total"><span>${t("total")}</span><strong>${money(total)}</strong></div><button class="primary" onclick="openCheckout()">${t("checkout")}</button></div>`;
@@ -1323,9 +1330,24 @@ function openDetail(id){
     if (!currentProduct) return;
 
     selectedSize = "";
+    selectedColor = "";
     document.getElementById("detailImg").src = currentProduct.images?.[0] || currentProduct.img || "";
     document.getElementById("detailTitle").textContent = currentProduct.title;
     document.getElementById("detailPrice").textContent = money(currentProduct.price);
+
+    const material = String(currentProduct.material || "").trim();
+    const colors = Array.isArray(currentProduct.colors) ? currentProduct.colors : [];
+    const materialBox = document.getElementById("detailMaterial");
+    materialBox.innerHTML = material ? `<b>${escapeHtml(t("material"))}:</b> ${escapeHtml(material)}` : "";
+    const colorsWrap = document.getElementById("detailColorsWrap");
+    const colorsBox = document.getElementById("detailColors");
+    if(colors.length){
+        colorsWrap.style.display = "block";
+        colorsBox.innerHTML = colors.map(color => `<button class="size" onclick="selectColor(this)">${escapeHtml(color)}</button>`).join("");
+    } else {
+        colorsWrap.style.display = "none";
+        colorsBox.innerHTML = "";
+    }
 
     const sizes = Array.isArray(currentProduct.sizes) ? currentProduct.sizes : [];
     const sizeBox = document.getElementById("detailSizes");
@@ -1343,14 +1365,15 @@ function openDetail(id){
             toast(t("chooseSize"));
             return;
         }
-        addToCart(currentProduct.id, selectedSize);
+        addToCart(currentProduct.id, selectedSize, selectedColor);
         closeDetail();
     };
 
     document.getElementById("detailOverlay").classList.add("show");
 }
 function closeDetail(){document.getElementById("detailOverlay").classList.remove("show")}
-function selectSize(btn){document.querySelectorAll(".size").forEach(x=>x.classList.remove("active"));btn.classList.add("active");selectedSize=btn.textContent}
+function selectSize(btn){document.querySelectorAll("#detailSizes .size").forEach(x=>x.classList.remove("active"));btn.classList.add("active");selectedSize=btn.textContent}
+function selectColor(btn){document.querySelectorAll("#detailColors .size").forEach(x=>x.classList.remove("active"));btn.classList.add("active");selectedColor=btn.textContent}
 
 async function loadCards(){
  const box=document.getElementById("paymentCards");
@@ -1372,7 +1395,7 @@ async function sendPaidOrder(){
  const phone=document.getElementById("checkoutPhone").value.trim(),address=document.getElementById("checkoutAddress").value.trim();
  if(!phone)return toast("Укажите номер телефона");if(!receipt)return toast("Загрузите чек об оплате");
  const user=tg?.initDataUnsafe?.user;
- const data={items:cart.map(x=>({title:x.title,price:x.price,size:x.size||""})),total:cart.reduce((s,p)=>s+p.price,0),phone,address:address||"Не указан",username:user?.username?"@"+user.username:"Не указан",telegram_id:user?.id||"Не указан",receipt:receipt.base64,receipt_name:receipt.name,receipt_type:receipt.type};
+ const data={items:cart.map(x=>({title:x.title,price:x.price,size:x.size||"",color:x.color||""})),total:cart.reduce((s,p)=>s+p.price,0),phone,address:address||"Не указан",username:user?.username?"@"+user.username:"Не указан",telegram_id:user?.id||"Не указан",receipt:receipt.base64,receipt_name:receipt.name,receipt_type:receipt.type};
  toast("Отправляем заказ...");
  try{const r=await fetch(API+"/api/order-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});const j=await r.json();if(!j.success)throw new Error(j.error||"error");
  orders.unshift({id:Date.now(),items:data.items,total:data.total,status:"Чек на проверке"});localStorage.setItem("rainix_orders",JSON.stringify(orders));cart=[];receipt=null;saveCart();renderCart();
