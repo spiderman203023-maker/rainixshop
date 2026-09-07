@@ -118,6 +118,12 @@ img {
     font-size:21px;
     font-weight:850
 }
+.about-text {
+    white-space:pre-line;
+    line-height:1.55;
+    color:#c7ced9;
+}
+
 .hero-sub {
     font-size:12px;
     color:#ddd;
@@ -881,11 +887,11 @@ img {
 </span>
 <span>→</span>
 </button>
-<div class="profile-action static">
+<button class="profile-action" onclick="openAbout()">
 <span>ℹ️ <span data-i18n="about">О нас</span>
 </span>
 <span>→</span>
-</div>
+</button>
 </div>
 </section>
 </div>
@@ -987,6 +993,29 @@ img {
 </div>
 </div>
 </div>
+<div id="aboutOverlay" class="overlay" onclick="if(event.target===this)closeAbout()">
+<div class="sheet">
+<div class="sheet-head">
+<div class="sheet-title" data-i18n="aboutTitle">О нас</div>
+<button class="close" onclick="closeAbout()">×</button>
+</div>
+<div class="muted about-text" data-i18n="aboutText">RAINIXSHOP — онлайн-магазин стильной одежды и обуви.
+
+Мы собираем актуальные вещи, которые легко вписать в повседневный образ.
+Наша цель — сделать стильные покупки простыми, удобными и доступными.
+
+Что у нас есть:
+• 👕 Одежда
+• 👖 Джинсы и брюки
+• 👟 Обувь
+• 🧢 Аксессуары
+• 📦 Доставка по Узбекистану
+
+Карго: 120 000 сум / кг
+
+📲 По вопросам и заказам — пишите нам в Telegram.</div>
+</div>
+</div>
 <div id="toast" class="toast">
 </div>
 
@@ -996,7 +1025,8 @@ const CARGO_RATE = 120000;
 const I18N = {
   ru:{
     language:"Язык", socials:"Мы в соцсетях", owner:"Для владельца", admin:"Админ-панель",
-    sections:"Разделы", cargo:"Карго-калькулятор", about:"О нас",
+    sections:"Разделы", cargo:"Карго-калькулятор", about:"О нас", aboutTitle:"О нас",
+    aboutText:"RAINIXSHOP — онлайн-магазин стильной одежды и обуви.\n\nМы собираем актуальные вещи, которые легко вписать в повседневный образ.\nНаша цель — сделать стильные покупки простыми, удобными и доступными.\n\nЧто у нас есть:\n• 👕 Одежда\n• 👖 Джинсы и брюки\n• 👟 Обувь\n• 🧢 Аксессуары\n• 📦 Доставка по Узбекистану\n\nКарго: 120 000 сум / кг\n\n📲 По вопросам и заказам — пишите нам в Telegram.",
     cargoDesc:"Рассчитайте стоимость карго по весу товара.", weight:"Вес товара, кг",
     cargoCost:"Стоимость карго", shop:"Магазин", purchases:"Покупки", profile:"Профиль",
     search:"Поиск по названию...", newer:"Новые", popular:"Популярные", sale:"Скидки",
@@ -1015,7 +1045,8 @@ const I18N = {
   },
   uz:{
     language:"Til", socials:"Ijtimoiy tarmoqlar", owner:"Egasi uchun", admin:"Admin paneli",
-    sections:"Bo‘limlar", cargo:"Kargo kalkulyatori", about:"Biz haqimizda",
+    sections:"Bo‘limlar", cargo:"Kargo kalkulyatori", about:"Biz haqimizda", aboutTitle:"Biz haqimizda",
+    aboutText:"RAINIXSHOP — zamonaviy kiyim va poyabzal onlayn do‘koni.\n\nBiz kundalik obrazga osongina mos keladigan zamonaviy mahsulotlarni tanlaymiz.\nMaqsadimiz — xaridni oddiy, qulay va hamyonbop qilish.\n\nBizda mavjud:\n• 👕 Kiyimlar\n• 👖 Jinsi va shimlar\n• 👟 Poyabzal\n• 🧢 Aksessuarlar\n• 📦 O‘zbekiston bo‘ylab yetkazib berish\n\nKargo: 120 000 so‘m / kg\n\n📲 Savol va buyurtmalar uchun Telegram orqali yozing.",
     cargoDesc:"Mahsulot og‘irligi bo‘yicha kargo narxini hisoblang.", weight:"Mahsulot og‘irligi, kg",
     cargoCost:"Kargo narxi", shop:"Do‘kon", purchases:"Xaridlar", profile:"Profil",
     search:"Nom bo‘yicha qidirish...", newer:"Yangi", popular:"Mashhur", sale:"Chegirmalar",
@@ -1034,7 +1065,8 @@ const I18N = {
   },
   en:{
     language:"Language", socials:"Social media", owner:"For owner", admin:"Admin panel",
-    sections:"Sections", cargo:"Cargo calculator", about:"About us",
+    sections:"Sections", cargo:"Cargo calculator", about:"About us", aboutTitle:"About us",
+    aboutText:"RAINIXSHOP — an online store for stylish clothing and footwear.\n\nWe select актуal items that are easy to fit into everyday outfits.\nOur goal is to make shopping simple, convenient and accessible.\n\nWhat we offer:\n• 👕 Clothing\n• 👖 Jeans and trousers\n• 👟 Footwear\n• 🧢 Accessories\n• 📦 Delivery across Uzbekistan\n\nCargo: 120,000 UZS / kg\n\n📲 For questions and orders, contact us on Telegram.",
     cargoDesc:"Calculate cargo cost by product weight.", weight:"Product weight, kg",
     cargoCost:"Cargo cost", shop:"Shop", purchases:"Purchases", profile:"Profile",
     search:"Search by name...", newer:"New", popular:"Popular", sale:"Sale",
@@ -1085,6 +1117,8 @@ function translateStatic(){
 }
 function openCargo(){document.getElementById("cargoOverlay").classList.add("show");calcCargo()}
 function closeCargo(){document.getElementById("cargoOverlay").classList.remove("show")}
+function openAbout(){document.getElementById("aboutOverlay").classList.add("show")}
+function closeAbout(){document.getElementById("aboutOverlay").classList.remove("show")}
 function calcCargo(){
   const kg=Number(document.getElementById("cargoWeight")?.value||0);
   const result=document.getElementById("cargoResult");
