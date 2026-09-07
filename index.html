@@ -252,6 +252,53 @@ img {
     border-color:var(--pink);
     color:#180b11
 }
+.price-filter-panel {
+    display:none;
+    margin:0 0 13px 0;
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:#0d1521;
+}
+.price-filter-panel.open { display:block; }
+.price-filter-title {
+    font-size:13px;
+    font-weight:800;
+    margin-bottom:9px;
+}
+.price-filter-row {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+.price-filter-input {
+    width:100%;
+    padding:10px 11px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:#09111c;
+    color:#fff;
+    outline:none;
+}
+.price-filter-actions {
+    display:flex;
+    gap:8px;
+    margin-top:9px;
+}
+.price-filter-actions button {
+    flex:1;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:#101a28;
+    color:#fff;
+    font-weight:750;
+}
+.price-filter-actions .apply {
+    background:var(--pink);
+    border-color:var(--pink);
+    color:#180b11;
+}
 .products {
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -802,7 +849,18 @@ img {
 <div class="search">
 <input id="search" placeholder="Поиск по названию..." oninput="renderProducts()">
 </div>
-<button class="filter-btn" onclick="toast('Фильтры скоро появятся')">☷</button>
+<button class="filter-btn" onclick="togglePriceFilters()">☷</button>
+</div>
+<div id="priceFilterPanel" class="price-filter-panel">
+<div class="price-filter-title" data-i18n="priceFilters">Фильтр по цене</div>
+<div class="price-filter-row">
+<input id="priceMin" class="price-filter-input" type="number" min="0" placeholder="От">
+<input id="priceMax" class="price-filter-input" type="number" min="0" placeholder="До">
+</div>
+<div class="price-filter-actions">
+<button onclick="resetPriceFilters()" data-i18n="resetFilters">Сбросить</button>
+<button class="apply" onclick="applyPriceFilters()" data-i18n="applyFilters">Применить</button>
+</div>
 </div>
 <div class="filters">
 <button class="filter active" onclick="setSort('new',this)">Новые</button>
@@ -858,7 +916,6 @@ img {
 <div id="profileId" class="muted">Telegram ID: —</div>
 </div>
 </div>
-<div style="margin-top:12px;color:var(--pink);font-size:13px;font-weight:800">⭐ Бонусы: 0</div>
 </div>
 <div class="profile-card">
 <div class="muted" data-i18n="language">Язык</div>
@@ -1029,7 +1086,7 @@ const I18N = {
     aboutText:"RAINIXSHOP — онлайн-магазин стильной одежды и обуви.\n\nМы собираем актуальные вещи, которые легко вписать в повседневный образ.\nНаша цель — сделать стильные покупки простыми, удобными и доступными.\n\nЧто у нас есть:\n• 👕 Одежда\n• 👖 Джинсы и брюки\n• 👟 Обувь\n• 🧢 Аксессуары\n• 📦 Доставка по Узбекистану\n\nКарго: 120 000 сум / кг\n\n📲 По вопросам и заказам — пишите нам в Telegram.",
     cargoDesc:"Рассчитайте стоимость карго по весу товара.", weight:"Вес товара, кг",
     cargoCost:"Стоимость карго", shop:"Магазин", purchases:"Покупки", profile:"Профиль",
-    search:"Поиск по названию...", newer:"Новые", popular:"Популярные", sale:"Скидки",
+    search:"Поиск по названию...", newer:"Новые", popular:"Популярные", sale:"Скидки", priceFilters:"Фильтр по цене", priceFrom:"От", priceTo:"До", applyFilters:"Применить", resetFilters:"Сбросить",
     cart:"Корзина", orders:"Заказы", photoSearch:"Поиск по фото", addCart:"В корзину",
     chooseSize:"Выберите размер", noSize:"Размер не указан", remove:"Удалить",
     checkout:"Оформить заказ →", payment:"Оплата", phone:"Телефон *", address:"Адрес доставки",
@@ -1038,7 +1095,7 @@ const I18N = {
     photoTitle:"Не нашли нужную вещь?", photoDesc:"Загрузите фото — мы попробуем найти товар и сообщим цену.",
     addPhoto:"📎 Добавить фото", sendRequest:"Отправить запрос", emptyCart:"🛍\n\nКорзина пуста",
     emptyOrders:"У вас пока нет заказов", productsEmpty:"Товаров пока нет",
-    adminHint:"Добавьте первый товар через админ-панель", bonuses:"⭐ Бонусы: 0",
+    adminHint:"Добавьте первый товар через админ-панель",
     size:"Размер", product:"Товар", delivery:"Доставка", paidSeparately:"Оплачивается отдельно",
     total:"Итого", items:"Товары", close:"Закрыть", description:"Описание",
     deliveryPayment:"Доставка и оплата", returns:"Возврат", newOrder:"Оформление заказа"
@@ -1049,7 +1106,7 @@ const I18N = {
     aboutText:"RAINIXSHOP — zamonaviy kiyim va poyabzal onlayn do‘koni.\n\nBiz kundalik obrazga osongina mos keladigan zamonaviy mahsulotlarni tanlaymiz.\nMaqsadimiz — xaridni oddiy, qulay va hamyonbop qilish.\n\nBizda mavjud:\n• 👕 Kiyimlar\n• 👖 Jinsi va shimlar\n• 👟 Poyabzal\n• 🧢 Aksessuarlar\n• 📦 O‘zbekiston bo‘ylab yetkazib berish\n\nKargo: 120 000 so‘m / kg\n\n📲 Savol va buyurtmalar uchun Telegram orqali yozing.",
     cargoDesc:"Mahsulot og‘irligi bo‘yicha kargo narxini hisoblang.", weight:"Mahsulot og‘irligi, kg",
     cargoCost:"Kargo narxi", shop:"Do‘kon", purchases:"Xaridlar", profile:"Profil",
-    search:"Nom bo‘yicha qidirish...", newer:"Yangi", popular:"Mashhur", sale:"Chegirmalar",
+    search:"Nom bo‘yicha qidirish...", newer:"Yangi", popular:"Mashhur", sale:"Chegirmalar", priceFilters:"Narx bo‘yicha filtr", priceFrom:"Dan", priceTo:"Gacha", applyFilters:"Qo‘llash", resetFilters:"Tozalash",
     cart:"Savat", orders:"Buyurtmalar", photoSearch:"Rasm orqali qidirish", addCart:"Savatga",
     chooseSize:"O‘lchamni tanlang", noSize:"O‘lcham ko‘rsatilmagan", remove:"O‘chirish",
     checkout:"Buyurtma berish →", payment:"To‘lov", phone:"Telefon *", address:"Yetkazib berish manzili",
@@ -1058,7 +1115,7 @@ const I18N = {
     photoTitle:"Kerakli mahsulotni topa olmadingizmi?", photoDesc:"Rasm yuklang — mahsulotni topishga va narxini aytishga harakat qilamiz.",
     addPhoto:"📎 Rasm qo‘shish", sendRequest:"So‘rov yuborish", emptyCart:"🛍\n\nSavat bo‘sh",
     emptyOrders:"Sizda hali buyurtmalar yo‘q", productsEmpty:"Hozircha mahsulotlar yo‘q",
-    adminHint:"Birinchi mahsulotni admin paneli orqali qo‘shing", bonuses:"⭐ Bonuslar: 0",
+    adminHint:"Birinchi mahsulotni admin paneli orqali qo‘shing",
     size:"O‘lcham", product:"Mahsulot", delivery:"Yetkazib berish", paidSeparately:"Alohida to‘lanadi",
     total:"Jami", items:"Mahsulotlar", close:"Yopish", description:"Tavsif",
     deliveryPayment:"Yetkazib berish va to‘lov", returns:"Qaytarish", newOrder:"Buyurtmani rasmiylashtirish"
@@ -1069,7 +1126,7 @@ const I18N = {
     aboutText:"RAINIXSHOP — an online store for stylish clothing and footwear.\n\nWe select актуal items that are easy to fit into everyday outfits.\nOur goal is to make shopping simple, convenient and accessible.\n\nWhat we offer:\n• 👕 Clothing\n• 👖 Jeans and trousers\n• 👟 Footwear\n• 🧢 Accessories\n• 📦 Delivery across Uzbekistan\n\nCargo: 120,000 UZS / kg\n\n📲 For questions and orders, contact us on Telegram.",
     cargoDesc:"Calculate cargo cost by product weight.", weight:"Product weight, kg",
     cargoCost:"Cargo cost", shop:"Shop", purchases:"Purchases", profile:"Profile",
-    search:"Search by name...", newer:"New", popular:"Popular", sale:"Sale",
+    search:"Search by name...", newer:"New", popular:"Popular", sale:"Sale", priceFilters:"Price filter", priceFrom:"From", priceTo:"To", applyFilters:"Apply", resetFilters:"Reset",
     cart:"Cart", orders:"Orders", photoSearch:"Search by photo", addCart:"Add to cart",
     chooseSize:"Choose a size", noSize:"No size specified", remove:"Remove",
     checkout:"Checkout →", payment:"Payment", phone:"Phone *", address:"Delivery address",
@@ -1078,7 +1135,7 @@ const I18N = {
     photoTitle:"Didn't find what you need?", photoDesc:"Upload a photo — we'll try to find the item and tell you the price.",
     addPhoto:"📎 Add photo", sendRequest:"Send request", emptyCart:"🛍\n\nYour cart is empty",
     emptyOrders:"You have no orders yet", productsEmpty:"No products yet",
-    adminHint:"Add your first product through the admin panel", bonuses:"⭐ Bonuses: 0",
+    adminHint:"Add your first product through the admin panel",
     size:"Size", product:"Product", delivery:"Delivery", paidSeparately:"Paid separately",
     total:"Total", items:"Items", close:"Close", description:"Description",
     deliveryPayment:"Delivery & payment", returns:"Returns", newOrder:"Checkout"
@@ -1104,6 +1161,11 @@ function translateStatic(){
   if(tabs[0])tabs[0].textContent=t("cart"); if(tabs[1])tabs[1].textContent=t("orders"); if(tabs[2])tabs[2].textContent=t("photoSearch");
   const filters=document.querySelectorAll(".filters .filter");
   if(filters[0])filters[0].textContent=t("newer"); if(filters[1])filters[1].textContent=t("popular"); if(filters[2])filters[2].textContent=t("sale");
+  const priceTitle=document.querySelector("[data-i18n=priceFilters]"); if(priceTitle)priceTitle.textContent=t("priceFilters");
+  const priceApply=document.querySelector("[data-i18n=applyFilters]"); if(priceApply)priceApply.textContent=t("applyFilters");
+  const priceReset=document.querySelector("[data-i18n=resetFilters]"); if(priceReset)priceReset.textContent=t("resetFilters");
+  const priceMin=document.getElementById("priceMin"); const priceMax=document.getElementById("priceMax");
+  if(priceMin){priceMin.placeholder=t("priceFrom");} if(priceMax){priceMax.placeholder=t("priceTo");}
   const cats=document.querySelectorAll(".cat span");
   const catNames={ru:["Все","Верх","Низ","Обувь","Аксессуары"],uz:["Barchasi","Ustki","Pastki","Oyoq kiyim","Aksessuarlar"],en:["All","Tops","Bottoms","Shoes","Accessories"]};
   cats.forEach((el,i)=>{if(catNames[currentLang])el.textContent=catNames[currentLang][i]||el.textContent});
@@ -1143,6 +1205,37 @@ async function loadProducts() {
 let cart=JSON.parse(localStorage.getItem("rainix_cart")||"[]");
 let orders=JSON.parse(localStorage.getItem("rainix_orders")||"[]");
 let category="all",sortMode="new",currentProduct=null,selectedSize="",receipt=null,photoBase64=null;
+let priceMin=null,priceMax=null;
+
+function togglePriceFilters(){
+    document.getElementById("priceFilterPanel").classList.toggle("open");
+}
+
+function applyPriceFilters(){
+    const minValue=document.getElementById("priceMin").value.trim();
+    const maxValue=document.getElementById("priceMax").value.trim();
+    priceMin=minValue===""?null:Number(minValue);
+    priceMax=maxValue===""?null:Number(maxValue);
+    if(priceMin!==null && priceMax!==null && priceMin>priceMax){
+        const tmp=priceMin; priceMin=priceMax; priceMax=tmp;
+        document.getElementById("priceMin").value=priceMin;
+        document.getElementById("priceMax").value=priceMax;
+    }
+    renderProducts();
+    document.getElementById("priceFilterPanel").classList.remove("open");
+}
+
+function resetPriceFilters(){
+    priceMin=null; priceMax=null;
+    document.getElementById("priceMin").value="";
+    document.getElementById("priceMax").value="";
+    renderProducts();
+    document.getElementById("priceFilterPanel").classList.remove("open");
+}
+
+document.addEventListener("keydown",e=>{
+    if(e.key==="Enter" && (document.activeElement?.id==="priceMin" || document.activeElement?.id==="priceMax")) applyPriceFilters();
+});
 
 const money=n=>Number(n||0).toLocaleString("ru-RU")+" сум";
 function toast(msg){const e=document.getElementById("toast");e.textContent=msg;e.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>e.classList.remove("show"),2600)}
@@ -1157,7 +1250,9 @@ function renderProducts(){
     const q = document.getElementById("search").value.toLowerCase().trim();
     let list = products.filter(p =>
         (category === "all" || p.cat === category) &&
-        String(p.title || "").toLowerCase().includes(q)
+        String(p.title || "").toLowerCase().includes(q) &&
+        (priceMin === null || Number(p.price || 0) >= priceMin) &&
+        (priceMax === null || Number(p.price || 0) <= priceMax)
     );
 
     if (sortMode === "popular") list = [...list].reverse();
