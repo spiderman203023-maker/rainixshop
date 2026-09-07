@@ -37,6 +37,10 @@
 </div>
 <label class="label">Размеры — через запятую</label>
 <input id="sizes" class="field" placeholder="40, 41, 42, 43">
+<label class="label">Цвета — через запятую</label>
+<input id="colors" class="field" placeholder="Черный, Белый, Серый">
+<label class="label">Материал</label>
+<input id="material" class="field" placeholder="Хлопок">
 <label class="label">Описание</label>
 <textarea id="description" class="field" style="height:90px;padding-top:10px" placeholder="Описание товара"></textarea>
 <label class="label">Фотографии</label>
@@ -97,17 +101,19 @@ async function addProduct(){
     try{
         if(!imageData.length)throw new Error("Добавьте хотя бы одну фотографию");
         const sizes=document.getElementById("sizes").value.split(",").map(x=>x.trim()).filter(Boolean);
+        const colors=document.getElementById("colors").value.split(",").map(x=>x.trim()).filter(Boolean);
+        const material=document.getElementById("material").value.trim();
         const data={
             title:document.getElementById("title").value.trim(),
             price:Number(document.getElementById("price").value),
             oldPrice:Number(document.getElementById("oldPrice").value||0),
             category:document.getElementById("category").value,
             stock:Number(document.getElementById("stock").value||0),
-            sizes,description:document.getElementById("description").value.trim(),images:imageData
+            sizes,colors,material,description:document.getElementById("description").value.trim(),images:imageData
         };
         await api("/api/admin/products",{method:"POST",body:JSON.stringify(data)});
         status("addStatus","✅ Товар добавлен");
-        ["title","price","oldPrice","sizes","description"].forEach(id=>document.getElementById(id).value="");
+        ["title","price","oldPrice","sizes","colors","material","description"].forEach(id=>document.getElementById(id).value="");
         document.getElementById("stock").value="1";
         document.getElementById("images").value="";
         document.getElementById("previews").innerHTML="";
@@ -126,7 +132,7 @@ async function loadProducts(){
             <div class="card" style="margin:0">
                 <div class="product">
                     <img class="thumb" src="${p.images?.[0]||""}">
-                    <div class="pinfo"><div class="pname">${escapeHtml(p.title)}</div><div class="muted">${money(p.price)} · ${escapeHtml(p.cat)}</div><div class="muted">Размеры: ${(p.sizes||[]).join(", ")||"не указаны"} · Остаток: ${p.stock}</div></div>
+                    <div class="pinfo"><div class="pname">${escapeHtml(p.title)}</div><div class="muted">${money(p.price)} · ${escapeHtml(p.cat)}</div><div class="muted">Размеры: ${(p.sizes||[]).join(", ")||"не указаны"} · Цвета: ${(p.colors||[]).join(", ")||"не указаны"} · Материал: ${escapeHtml(p.material||"не указан")} · Остаток: ${p.stock}</div></div>
                 </div>
                 <div class="actions"><button class="small del" onclick="deleteProduct(${p.id})">🗑 Удалить</button></div>
             </div>`).join(""):'<div class="muted">Товаров пока нет.</div>';
