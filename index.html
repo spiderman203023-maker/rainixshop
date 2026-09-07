@@ -938,7 +938,7 @@ img {
 </div>
 <div class="profile-card">
 <div class="muted" style="margin-bottom:5px" data-i18n="owner">Для владельца</div>
-<a class="link" href="admin.html" style="display:block">⚙️ <span data-i18n="admin">Админ-панель</span>
+<a id="adminLink" class="link" href="admin.html" style="display:none">⚙️ <span data-i18n="admin">Админ-панель</span>
 </a>
 </div>
 <div class="profile-card">
@@ -1307,7 +1307,7 @@ function removeCart(i){cart.splice(i,1);saveCart();renderCart()}
 
 function renderCart(){
  const box=document.getElementById("cartList");
- if(!cart.length){box.innerHTML='<div class="empty">🛍<br><br>${t("emptyCart").replace("\n","<br>")}<br><span class="muted">${t("productsEmpty")}</span></div>';return}
+ if(!cart.length){box.innerHTML='<div class="empty">🛍<br><br>'+t("emptyCart").replace(/\n/g,"<br>")+'</div>';return}
  const total=cart.reduce((s,p)=>s+p.price,0);
  box.innerHTML=cart.map((p,i)=>`
  <div class="cart-item"><img class="cart-img" src="${p.img}" alt=""><div class="cart-info">
@@ -1418,8 +1418,17 @@ async function submitPhotoSearch(){
  }catch(e){toast("❌ Ошибка соединения с сервером")}
 }
 function initUser(){const u=tg?.initDataUnsafe?.user;if(!u)return;const name=u.first_name||"Пользователь";document.getElementById("profileName").textContent=name;document.getElementById("avatar").textContent=name.charAt(0).toUpperCase();document.getElementById("profileUsername").textContent=u.username?"@"+u.username:"Без username";document.getElementById("profileId").textContent="Telegram ID: "+u.id}
+async function checkAdminVisibility(){
+ try{
+  const initData=tg?.initData||"";
+  if(!initData)return;
+  const r=await fetch(API+"/api/admin-visible",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({initData})});
+  const j=await r.json();
+  if(j.success&&j.is_admin){const link=document.getElementById("adminLink");if(link)link.style.display="block";}
+ }catch(e){}
+}
 
-renderCart();renderOrders();updateBadge();initUser();loadProducts();setLanguage(currentLang);
+renderCart();renderOrders();updateBadge();initUser();checkAdminVisibility();loadProducts();setLanguage(currentLang);
 </script>
 </body>
 </html>
